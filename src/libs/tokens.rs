@@ -2,9 +2,6 @@ use logos::Logos;
 
 #[derive(Logos, Debug, PartialEq)]
 pub enum Token {
-    #[error]
-    Error,
-
     // Uni operators
     #[token = "!"]
     Not,
@@ -23,6 +20,8 @@ pub enum Token {
     #[token = "this"]
     This,
     // General
+    #[error]
+    Error,
     #[regex = "[a-zA-Z]+"]
     String,
 }
