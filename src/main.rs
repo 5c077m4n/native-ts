@@ -5,4 +5,6 @@ mod libs;
 use libs::tokens;
 
 #[tokio::main]
-async fn main() {}
+async fn main() -> Result<(), ()> {
+    Ok(())
+}
