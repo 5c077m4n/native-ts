@@ -53,6 +53,54 @@ pub enum Token {
     #[token("??")]
     NullishCoalescing,
 
+    #[token("=")]
+    Assign,
+    #[token("+=")]
+    AddAssign,
+    #[token("-=")]
+    SubAssign,
+    #[token("*=")]
+    MulAssign,
+    #[token("/=")]
+    DivAssign,
+    #[token("%=")]
+    ModAssign,
+    #[token("<<=")]
+    LShiftAssign,
+    #[token(">>=")]
+    RShiftAssign,
+    #[token(">>>=")]
+    ZeroFillRShiftAssign,
+    #[token("|=")]
+    BitOrAssign,
+    #[token("^=")]
+    BitXorAssign,
+    #[token("&=")]
+    BitAndAssign,
+    #[token("**=")]
+    ExpAssign,
+
+    #[token("++")]
+    PlusPlus,
+    #[token("--")]
+    MinusMinus,
+
+    #[token("!")]
+    Bang,
+    #[token("~")]
+    Tilde,
+    #[token("typeof")]
+    TypeOf,
+    #[token("void")]
+    Void,
+    #[token("delete")]
+    Delete,
+
+    #[regex(r"<[a-zA-Z\s_-]+></[a-zA-Z\s_-]+ />")]
+    JsxTag,
+    #[regex(r"<[a-zA-Z\s_-]+ />")]
+    SelfClosingJsxTag,
+
     #[token(".")]
     Period,
     #[regex("[a-zA-Z]+")]
