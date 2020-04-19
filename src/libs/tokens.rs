@@ -119,6 +119,10 @@ pub enum Token {
     This,
     #[token("globalThis")]
     GlobalThis,
+    #[token("process")]
+    Process,
+    #[token("window")]
+    Window,
     #[token("function")]
     Function,
     #[token("void")]
@@ -134,13 +138,19 @@ pub enum Token {
     #[token("typeof")]
     TypeOf,
     #[token("instanceof")]
-	InstanceOf,
-	#[token("enum")]
-	Enum,
-	#[token("class")]
-	Class,
-	#[token("interface")]
+    InstanceOf,
+    #[token("enum")]
+    Enum,
+    #[token("class")]
+    Class,
+    #[token("interface")]
     Interface,
+    #[token("import")]
+    Import,
+    #[token("export")]
+    Export,
+    #[token("from")]
+    From,
 
     #[regex(r"<[a-zA-Z\s_=-]+></[a-zA-Z-]+ />", |lex| lex.slice().parse())]
     HtmlTag(String),
@@ -155,11 +165,12 @@ pub enum Token {
     SemiColon,
     #[token(":")]
     Colon,
+
     #[regex("[a-zA-Z]+", |lex| lex.slice().parse())]
     Text(String),
-    #[regex(r"\d+(?:e\d+)?", |lex| lex.slice().parse())]
+    #[regex(r"-?\d+(?:e\d+)?", |lex| lex.slice().parse())]
     Int(i32),
-    #[regex(r"\d+\.\d*(?:e\d+)?", |lex| lex.slice().parse())]
+    #[regex(r"-?\d+\.\d*(?:e\d+)?", |lex| lex.slice().parse())]
     Float(f64),
 
     #[regex(r"[\s\t\n\f]+", logos::skip)]
@@ -204,10 +215,26 @@ mod tests {
     }
 
     #[test]
+    fn parse_number_neg_int() {
+        let mut lex = Token::lexer("-12");
+
+        assert_eq!(lex.next(), Some(Token::Int(-12)));
+        assert_eq!(lex.next(), None);
+    }
+
+    #[test]
     fn parse_number_basic_float() {
         let mut lex = Token::lexer("12.");
 
         assert_eq!(lex.next(), Some(Token::Float(12.0)));
+        assert_eq!(lex.next(), None);
+    }
+
+    #[test]
+    fn parse_number_neg_float() {
+        let mut lex = Token::lexer("-12.");
+
+        assert_eq!(lex.next(), Some(Token::Float(-12.0)));
         assert_eq!(lex.next(), None);
     }
 
