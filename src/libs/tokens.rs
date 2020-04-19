@@ -134,7 +134,13 @@ pub enum Token {
     #[token("typeof")]
     TypeOf,
     #[token("instanceof")]
-    InstanceOf,
+	InstanceOf,
+	#[token("enum")]
+	Enum,
+	#[token("class")]
+	Class,
+	#[token("interface")]
+    Interface,
 
     #[regex(r"<[a-zA-Z\s_=-]+></[a-zA-Z-]+ />", |lex| lex.slice().parse())]
     HtmlTag(String),
