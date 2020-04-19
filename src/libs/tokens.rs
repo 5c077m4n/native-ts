@@ -1,4 +1,4 @@
-use logos::Logos;
+use logos::{self, Logos};
 
 #[derive(Logos, Debug, PartialEq)]
 pub enum Token {
@@ -44,10 +44,6 @@ pub enum Token {
     LogicalOr,
     #[token("&&")]
     LogicalAnd,
-    #[token("in")]
-    In,
-    #[token("instanceo")]
-    InstanceOf,
     #[token("**")]
     Exp,
     #[token("??")]
@@ -85,26 +81,59 @@ pub enum Token {
     #[token("--")]
     MinusMinus,
 
+    #[token("let")]
+    Let,
+    #[token("const")]
+    Const,
+
     #[token("!")]
-    Bang,
+    Exclamation,
     #[token("~")]
     Tilde,
-    #[token("typeof")]
-    TypeOf,
+    #[token("'")]
+    Tag,
+    #[token("\"")]
+    DoubleTag,
+    #[token("`")]
+    SideTag,
+    #[token("@")]
+    At,
+
     #[token("void")]
     Void,
     #[token("delete")]
     Delete,
+    #[token("null")]
+    Null,
+    #[token("undefined")]
+    Undefined,
+    #[token("in")]
+    In,
+    #[token("typeof")]
+    TypeOf,
+    #[token("instanceof")]
+    InstanceOf,
 
-    #[regex(r"<[a-zA-Z\s_-]+></[a-zA-Z\s_-]+ />")]
-    JsxTag,
+    #[regex(r"<[a-zA-Z\s_=-]+></[a-zA-Z-]+ />")]
+    HtmlTag,
     #[regex(r"<[a-zA-Z\s_-]+ />")]
-    SelfClosingJsxTag,
+    SelfClosingHtmlTag,
 
     #[token(".")]
     Period,
+    #[token(";")]
+    SemiColon,
+    #[token(":")]
+    Colon,
     #[regex("[a-zA-Z]+")]
     String,
+    #[regex(r"\d+(?:e\d+)?")]
+    Int,
+    #[regex(r"\d+\.\d*(?:e\d+)?")]
+    Float,
+
+    #[regex(r"[\s\t\n\f]+", logos::skip)]
+    Skip,
     #[error]
     Error,
 }
@@ -114,7 +143,6 @@ pub mod tests {
     use super::*;
 
     #[test]
-    #[ignore]
     fn sanity() {
         let mut lex = Token::lexer("Some test string.");
 
@@ -134,6 +162,48 @@ pub mod tests {
         assert_eq!(lex.span(), 16..17);
         assert_eq!(lex.slice(), ".");
 
+        assert_eq!(lex.next(), None);
+    }
+
+    #[test]
+    fn parse_number_basic() {
+        let mut lex = Token::lexer("1");
+
+        assert_eq!(lex.next(), Some(Token::Int));
+        assert_eq!(lex.next(), None);
+    }
+
+    #[test]
+    fn parse_number_exp() {
+        let mut lex = Token::lexer("123e12");
+
+        assert_eq!(lex.next(), Some(Token::Int));
+        assert_eq!(lex.next(), None);
+    }
+
+    #[test]
+    fn parse_number_frac() {
+        let mut lex = Token::lexer("123123.");
+
+        assert_eq!(lex.next(), Some(Token::Float));
+        assert_eq!(lex.next(), None);
+    }
+
+    #[test]
+    fn parse_number_frac_2() {
+        let mut lex = Token::lexer("123123.55");
+
+        assert_eq!(lex.next(), Some(Token::Float));
+        assert_eq!(lex.next(), None);
+    }
+
+    #[test]
+    fn parse_expr() {
+        let mut lex = Token::lexer("23e25 !== 22.");
+
+        assert_eq!(lex.next(), Some(Token::Int));
+        assert_eq!(lex.next(), Some(Token::NotEqEq));
+        assert_eq!(lex.next(), Some(Token::Float));
         assert_eq!(lex.next(), None);
     }
 }
