@@ -5,9 +5,7 @@ use tokio::fs;
 
 #[allow(dead_code)]
 pub async fn read_content(file_path: impl AsRef<Path>) -> String {
-    fs::read_to_string(file_path)
-        .await
-        .expect("The requested file does not exist.")
+    fs::read_to_string(file_path).await.expect("File not found")
 }
 
 #[cfg(test)]
@@ -17,7 +15,7 @@ mod tests {
     use tokio::runtime::Runtime;
 
     #[test]
-    #[should_panic(expected = "The requested file does not exist.")]
+    #[should_panic(expected = "File not found")]
     fn sanity() {
         let _ = Runtime::new()
             .unwrap()
