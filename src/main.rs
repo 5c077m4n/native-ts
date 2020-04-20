@@ -1,32 +1,30 @@
 mod libs;
 
-use libs::{file_reader, parse_cli_args::CliArgs, remote_script, tokens::Token};
+use libs::{parse_cli_args::CliArgs, remote_script, tokens::Token};
 use logos::Logos;
 use std::{
 	io::{self, Write},
 	path::PathBuf,
 };
 use structopt::StructOpt;
+use tokio::{self, fs};
 use url::Url;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), reqwest::Error> {
 	let args = CliArgs::from_args();
 
 	if let Some(path) = args.path {
 		if let Ok(remote_path) = Url::parse(path.to_str().unwrap()) {
-			match remote_script::get_remote_script(PathBuf::from(remote_path.as_str())).await {
-				Ok(file_content) => {
-					let lex = Token::lexer(file_content.as_str());
+			let script =
+				remote_script::get_remote_script(PathBuf::from(remote_path.as_str())).await?;
+			let lex = Token::lexer(script.as_str());
 
-					for token in lex.spanned() {
-						println!("{:?}", token);
-					}
-				}
-				Err(error) => panic!(error),
+			for token in lex.spanned() {
+				println!("{:?}", token);
 			}
 		} else {
-			let file_content = file_reader::read_content(path).await;
+			let file_content = fs::read_to_string(path).await.unwrap();
 			let lex = Token::lexer(file_content.as_str());
 
 			for token in lex.spanned() {
@@ -55,4 +53,6 @@ async fn main() {
 			}
 		}
 	}
+
+	Ok(())
 }
