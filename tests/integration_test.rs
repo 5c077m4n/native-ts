@@ -1,8 +1,9 @@
 use assert_cmd::Command;
+
 mod common;
 
 #[cfg(test)]
-mod tests {
+mod integration_tests {
 	use super::*;
 
 	#[test]
