@@ -20,6 +20,12 @@ async fn main() {
 		for token in lex.spanned() {
 			println!("{:?}", token);
 		}
+	} else if let Some(command_to_eval) = args.evaluate {
+		let lex = Token::lexer(command_to_eval.as_str());
+
+		for token in lex.spanned() {
+			println!("{:?}", token);
+		}
 	} else {
 		loop {
 			print!("> ");
