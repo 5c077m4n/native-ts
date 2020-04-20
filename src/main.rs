@@ -1,8 +1,3 @@
-extern crate logos;
-extern crate reqwest;
-extern crate structopt;
-extern crate tokio;
-extern crate url;
 mod libs;
 
 use libs::{file_reader, parse_cli_args::CliArgs, remote_script, tokens::Token};
