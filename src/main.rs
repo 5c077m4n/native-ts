@@ -1,24 +1,42 @@
 extern crate logos;
+extern crate reqwest;
 extern crate structopt;
 extern crate tokio;
+extern crate url;
 mod libs;
 
-#[allow(unused_imports)]
-use libs::{file_reader, parse_cli_args::CliArgs, tokens::Token};
+use libs::{file_reader, parse_cli_args::CliArgs, remote_script, tokens::Token};
 use logos::Logos;
-use std::io::{self, Write};
+use std::{
+	io::{self, Write},
+	path::PathBuf,
+};
 use structopt::StructOpt;
+use url::Url;
 
 #[tokio::main]
 async fn main() {
 	let args = CliArgs::from_args();
 
 	if let Some(path) = args.path {
-		let file_content = file_reader::read_content(path).await;
-		let lex = Token::lexer(file_content.as_str());
+		if let Ok(remote_path) = Url::parse(path.to_str().unwrap()) {
+			match remote_script::get_remote_script(PathBuf::from(remote_path.as_str())).await {
+				Ok(file_content) => {
+					let lex = Token::lexer(file_content.as_str());
 
-		for token in lex.spanned() {
-			println!("{:?}", token);
+					for token in lex.spanned() {
+						println!("{:?}", token);
+					}
+				}
+				Err(error) => panic!(error),
+			}
+		} else {
+			let file_content = file_reader::read_content(path).await;
+			let lex = Token::lexer(file_content.as_str());
+
+			for token in lex.spanned() {
+				println!("{:?}", token);
+			}
 		}
 	} else if let Some(command_to_eval) = args.evaluate {
 		let lex = Token::lexer(command_to_eval.as_str());
