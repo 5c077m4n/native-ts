@@ -7,12 +7,15 @@ use structopt::StructOpt;
 
 #[derive(StructOpt)]
 pub struct CliArgs {
-    #[structopt(short, long)]
-    pub debug: bool,
+	#[structopt(short, long)]
+	pub debug: bool,
 
-    #[structopt(short, long)]
-    pub silent: bool,
+	#[structopt(short, long)]
+	pub silent: bool,
 
-    #[structopt(parse(from_os_str))]
-    pub path: Option<PathBuf>,
+	#[structopt(short, long)]
+	pub evaluate: Option<String>,
+
+	#[structopt(parse(from_os_str))]
+	pub path: Option<PathBuf>,
 }
