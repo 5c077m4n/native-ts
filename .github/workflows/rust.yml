@@ -15,6 +15,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - name: Cache
+      uses: actions/cache@v1.1.2
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
     - uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
