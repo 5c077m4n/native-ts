@@ -2,10 +2,7 @@ mod libs;
 
 use libs::{parse_cli_args::CliArgs, remote_script, tokens::Token};
 use logos::Logos;
-use std::{
-	io::{self, Write},
-	path::PathBuf,
-};
+use std::io::{self, Write};
 use structopt::StructOpt;
 use tokio::{self, fs};
 use url::Url;
@@ -15,24 +12,25 @@ async fn main() -> Result<(), reqwest::Error> {
 	let args = CliArgs::from_args();
 
 	if let Some(path) = args.path {
-		if let Ok(remote_path) = Url::parse(path.to_str().unwrap()) {
-			let script =
-				remote_script::get_remote_script(PathBuf::from(remote_path.as_str())).await?;
-			let lex = Token::lexer(script.as_str());
+		let path = path.to_str().unwrap();
+
+		if let Ok(remote_path) = Url::parse(path) {
+			let remote_script = remote_script::get_remote_script(remote_path.as_str()).await?;
+			let lex = Token::lexer(&remote_script);
 
 			for token in lex.spanned() {
 				println!("{:?}", token);
 			}
 		} else {
-			let file_content = fs::read_to_string(path).await.unwrap();
-			let lex = Token::lexer(file_content.as_str());
+			let local_script = fs::read_to_string(path).await.unwrap();
+			let lex = Token::lexer(&local_script);
 
 			for token in lex.spanned() {
 				println!("{:?}", token);
 			}
 		}
 	} else if let Some(command_to_eval) = args.evaluate {
-		let lex = Token::lexer(command_to_eval.as_str());
+		let lex = Token::lexer(&command_to_eval);
 
 		for token in lex.spanned() {
 			println!("{:?}", token);
@@ -47,7 +45,7 @@ async fn main() -> Result<(), reqwest::Error> {
 				.read_line(&mut input)
 				.expect("Unable to read user input");
 
-			let lex = Token::lexer(input.as_str());
+			let lex = Token::lexer(&input);
 			for token in lex.spanned() {
 				println!("{:?}", token);
 			}

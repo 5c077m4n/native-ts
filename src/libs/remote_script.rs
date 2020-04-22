@@ -1,11 +1,9 @@
 use reqwest::{self, StatusCode};
-use std::path::{Path, PathBuf};
 
-pub async fn get_remote_script(url: PathBuf) -> Result<String, reqwest::Error> {
-	assert!(url.to_str().unwrap().ends_with(".ts"), "Wrong file type");
+pub async fn get_remote_script(url: &str) -> Result<String, reqwest::Error> {
+	assert!(url.ends_with(".ts"), "Wrong file type");
 
-	let url = Path::new(&url);
-	let response = reqwest::get(url.to_str().unwrap()).await?;
+	let response = reqwest::get(url).await?;
 	assert_eq!(response.status(), StatusCode::OK, "Could not get {:?}", url);
 
 	response.text().await
@@ -13,7 +11,6 @@ pub async fn get_remote_script(url: PathBuf) -> Result<String, reqwest::Error> {
 
 #[cfg(test)]
 mod remote_script_tests {
-	extern crate tokio;
 	use super::*;
 	use tokio::runtime::Runtime;
 
@@ -22,9 +19,9 @@ mod remote_script_tests {
 	fn incorrect_remote_file_type() {
 		Runtime::new()
 			.unwrap()
-			.block_on(get_remote_script(PathBuf::from(
+			.block_on(get_remote_script(
 				"https://github.com/5c077m4n/http-responder/blob/master/src/index.txt",
-			)))
+			))
 			.unwrap();
 	}
 
@@ -33,16 +30,16 @@ mod remote_script_tests {
 	fn local_file() {
 		Runtime::new()
 			.unwrap()
-			.block_on(get_remote_script(PathBuf::from("./src/index.js")))
+			.block_on(get_remote_script("./src/index.js"))
 			.unwrap();
 	}
 
 	#[test]
 	fn should_work() {
 		Runtime::new().unwrap().block_on(async {
-			let script = get_remote_script(PathBuf::from(
+			let script = get_remote_script(
 				"https://github.com/5c077m4n/http-responder/blob/master/src/index.ts",
-			))
+			)
 			.await
 			.unwrap();
 

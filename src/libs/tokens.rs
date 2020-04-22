@@ -101,7 +101,7 @@ pub enum Token {
 	#[token("'")]
 	Tag,
 	#[token("\"")]
-	DoubleTag,
+	TagDouble,
 	#[token("`")]
 	BackTick,
 	#[token("@")]
@@ -154,10 +154,10 @@ pub enum Token {
 	#[token("from")]
 	From,
 
-	#[regex(r"<[a-zA-Z\s_=-]+></[a-zA-Z-]+ />", |lex| lex.slice().parse())]
+	#[regex(r#"<[a-zA-Z\s_='"-]+></[a-zA-Z-]+\s?/>"#, |lex| lex.slice().parse())]
 	HtmlTag(String),
-	#[regex(r"<[a-zA-Z\s_-]+ />", |lex| lex.slice().parse())]
-	SelfClosingHtmlTag(String),
+	#[regex(r#"<[a-zA-Z\s_'"-]+ />"#, |lex| lex.slice().parse())]
+	HtmlTagSelfClosing(String),
 
 	#[token(".")]
 	Period,
