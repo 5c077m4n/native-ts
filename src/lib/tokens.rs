@@ -1,4 +1,5 @@
 use logos::{self, Logos};
+use regex::Regex;
 
 #[derive(Logos, Debug, PartialEq)]
 pub enum Token {
@@ -147,12 +148,24 @@ pub enum Token {
 	Class,
 	#[token("interface")]
 	Interface,
-	#[token("import")]
-	Import,
-	#[token("export")]
-	Export,
-	#[token("from")]
-	From,
+	#[regex(r#"import\s[\w$]+\sfrom\s(:?'[\w/.]+'|"[\w/.]+")"#, |lex| {
+		lazy_static! {
+			static ref DEFAULT_IMPORT_REGEX: Regex = Regex::new(r#"import\s([\w&]+)\sfrom\s(:?'([\w/.]+)'|"([\w/.]+)")"#).unwrap();
+		}
+		let lex = lex.slice();
+		let matches = &DEFAULT_IMPORT_REGEX.captures(lex).unwrap();
+		(matches[1].to_string(), matches[2].to_string())
+	})]
+	ImportDefault((String, String)),
+	#[regex(r#"import\s\{[\s\w$,]+\}\sfrom\s(:?'[\w/.]+'|"[\w/.]+")"#, |lex| {
+		lazy_static! {
+			static ref NAMED_IMPORT_REGEX: Regex = Regex::new(r#"import\s\{([\s\w&,]+)\}\sfrom\s(:?'([\w/.]+)'|"([\w/.]+)")"#).unwrap();
+		}
+		let lex = lex.slice();
+		let matches = &NAMED_IMPORT_REGEX.captures(lex).unwrap();
+		(matches[1].chars().filter(|c| !c.is_whitespace()).collect(), matches[2].to_string())
+	})]
+	ImportNamed((String, String)),
 
 	#[regex(r#"<[a-zA-Z\s_='"-]+></[a-zA-Z-]+\s?/>"#, |lex| lex.slice().parse())]
 	HtmlTag(String),
