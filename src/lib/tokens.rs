@@ -296,4 +296,22 @@ mod tests {
 		assert_eq!(lex.next(), Some(Token::Float(22.0)));
 		assert_eq!(lex.next(), None);
 	}
+
+	#[test]
+	#[ignore]
+	fn default_import() {
+		let mut lex = Token::lexer("import file1 from './file/path.ts'");
+
+		assert_eq!(lex.next(), Some(Token::ImportDefault("", "")));
+		assert_eq!(lex.next(), None);
+	}
+
+	#[test]
+	#[ignore]
+	fn parse_expr() {
+		let mut lex = Token::lexer("import { file1, file2 } from './file/path.ts'");
+
+		assert_eq!(lex.next(), Some(Token::ImportNamed("", "")));
+		assert_eq!(lex.next(), None);
+	}
 }
