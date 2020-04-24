@@ -150,6 +150,7 @@ pub enum Token {
 	Interface,
 	#[regex(r#"import\s[\w$]+\sfrom\s(:?'[\w/.]+'|"[\w/.]+")"#, |lex| {
 		lazy_static! {
+			// TODO: remove the \' chars from being captured
 			static ref DEFAULT_IMPORT_REGEX: Regex = Regex::new(r#"import\s([\w&]+)\sfrom\s(:?'([a-zA-Z0-9_.-/]+)'|"([a-zA-Z0-9_.-/]+)")"#).unwrap();
 		}
 		let lex = lex.slice();
@@ -159,6 +160,7 @@ pub enum Token {
 	ImportDefault((String, String)),
 	#[regex(r#"import\s\{[\s\w$,]+\}\sfrom\s(:?'[\w/.]+'|"[\w/.]+")"#, |lex| {
 		lazy_static! {
+			// TODO: remove the \' chars from being captured
 			static ref NAMED_IMPORT_REGEX: Regex = Regex::new(r#"import\s\{([\s\w&,]+)\}\sfrom\s(:?'([a-zA-Z0-9_.-/]+)'|"([a-zA-Z0-9_.-/]+)")"#).unwrap();
 		}
 		let lex = lex.slice();
@@ -183,6 +185,7 @@ pub enum Token {
 
 	#[regex("[a-zA-Z]+", |lex| lex.slice().parse())]
 	Text(String),
+	// TODO: fix this...
 	#[regex(r"-?\d+(?:e\d+)?", |lex| lex.slice().parse())]
 	Int(i32),
 	#[regex(r"-?\d+\.\d*(?:e\d+)?", |lex| lex.slice().parse())]
