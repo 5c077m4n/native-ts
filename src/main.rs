@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate lazy_static;
-
 mod lib;
 
 use lib::{parse_cli_args::CliArgs, remote_script, tokens::Token};
