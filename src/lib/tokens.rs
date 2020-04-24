@@ -150,7 +150,7 @@ pub enum Token {
 	Interface,
 	#[regex(r#"import\s[\w$]+\sfrom\s(:?'[\w/.]+'|"[\w/.]+")"#, |lex| {
 		lazy_static! {
-			static ref DEFAULT_IMPORT_REGEX: Regex = Regex::new(r#"import\s([\w&]+)\sfrom\s(:?'([\w/.]+)'|"([\w/.]+)")"#).unwrap();
+			static ref DEFAULT_IMPORT_REGEX: Regex = Regex::new(r#"import\s([\w&]+)\sfrom\s(:?'([a-zA-Z0-9_.-/]+)'|"([a-zA-Z0-9_.-/]+)")"#).unwrap();
 		}
 		let lex = lex.slice();
 		let matches = &DEFAULT_IMPORT_REGEX.captures(lex).unwrap();
@@ -159,7 +159,7 @@ pub enum Token {
 	ImportDefault((String, String)),
 	#[regex(r#"import\s\{[\s\w$,]+\}\sfrom\s(:?'[\w/.]+'|"[\w/.]+")"#, |lex| {
 		lazy_static! {
-			static ref NAMED_IMPORT_REGEX: Regex = Regex::new(r#"import\s\{([\s\w&,]+)\}\sfrom\s(:?'([\w/.]+)'|"([\w/.]+)")"#).unwrap();
+			static ref NAMED_IMPORT_REGEX: Regex = Regex::new(r#"import\s\{([\s\w&,]+)\}\sfrom\s(:?'([a-zA-Z0-9_.-/]+)'|"([a-zA-Z0-9_.-/]+)")"#).unwrap();
 		}
 		let lex = lex.slice();
 		let matches = &NAMED_IMPORT_REGEX.captures(lex).unwrap();
@@ -298,20 +298,30 @@ mod tests {
 	}
 
 	#[test]
-	#[ignore]
 	fn default_import() {
 		let mut lex = Token::lexer("import file1 from './file/path.ts'");
 
-		assert_eq!(lex.next(), Some(Token::ImportDefault("", "")));
+		assert_eq!(
+			lex.next(),
+			Some(Token::ImportDefault((
+				"file1".to_string(),
+				"'./file/path.ts'".to_string()
+			)))
+		);
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
-	#[ignore]
-	fn parse_expr() {
+	fn named_import() {
 		let mut lex = Token::lexer("import { file1, file2 } from './file/path.ts'");
 
-		assert_eq!(lex.next(), Some(Token::ImportNamed("", "")));
+		assert_eq!(
+			lex.next(),
+			Some(Token::ImportNamed((
+				"file1,file2".to_string(),
+				"'./file/path.ts'".to_string()
+			)))
+		);
 		assert_eq!(lex.next(), None);
 	}
 }
