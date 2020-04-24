@@ -50,6 +50,15 @@ pub enum Token {
 	#[token("??")]
 	NullishCoalescing,
 
+	#[token("//")]
+	Comment,
+	#[token("/**")]
+	CommentInlineDocStart,
+	#[token("/*")]
+	CommentInlineStart,
+	#[token("*/")]
+	CommentInlineEnd,
+
 	#[token("=")]
 	Assign,
 	#[token("+=")]
@@ -185,7 +194,7 @@ pub enum Token {
 
 	#[regex("[a-zA-Z]+", |lex| lex.slice().parse())]
 	Text(String),
-	// TODO: fix this...
+	// TODO: fix this... (does not find '12e3')
 	#[regex(r"-?\d+(?:e\d+)?", |lex| lex.slice().parse())]
 	Int(i32),
 	#[regex(r"-?\d+\.\d*(?:e\d+)?", |lex| lex.slice().parse())]
@@ -259,9 +268,9 @@ mod tests {
 	#[test]
 	#[ignore]
 	fn parse_number_exp_int() {
-		let mut lex = Token::lexer("12e2");
+		let mut lex = Token::lexer("12e3");
 
-		assert_eq!(lex.next(), Some(Token::Int(1_200)));
+		assert_eq!(lex.next(), Some(Token::Int(12_000)));
 		assert_eq!(lex.next(), None);
 	}
 
