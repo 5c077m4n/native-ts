@@ -1,4 +1,10 @@
-use logos::{self, Logos};
+use logos::{self, Lexer, Logos};
+
+fn get_string_content(lex: &mut Lexer<Token>) -> Option<String> {
+	let lex = lex.slice();
+	let content = lex[1..lex.len() - 1].parse().ok()?;
+	Some(content)
+}
 
 #[derive(Logos, Debug, PartialEq)]
 pub enum Token {
@@ -178,15 +184,15 @@ pub enum Token {
 	Colon,
 
 	// TODO: fix import path not found
-	#[regex(r#"'.*'"#, |lex| lex.slice().parse())]
+	#[regex(r"'([^']*)'", get_string_content)]
 	StringSingle(String),
-	#[regex(r#"".*""#, |lex| lex.slice().parse())]
+	#[regex(r#""[^"]*""#, get_string_content)]
 	StringDouble(String),
-	#[regex(r#"`(?s).*(?-s)`"#, |lex| lex.slice().parse())]
+	#[regex(r#"`(?s)[^`]*(?-s)`"#, get_string_content)]
 	StringTemplate(String),
 	#[regex(r#"/.+/"#, |lex| lex.slice().parse())]
 	JsRegex(String),
-	#[regex("[a-zA-Z0-9]+", |lex| lex.slice().parse())]
+	#[regex("[a-zA-Z0-9$_]+", |lex| lex.slice().parse())]
 	Text(String),
 
 	// TODO: fix this... (does not find '12e3')
@@ -298,39 +304,45 @@ mod tests {
 	fn parse_expr() {
 		let mut lex = Token::lexer("23e3 !== 22.");
 
-		assert_eq!(lex.next(), Some(Token::Int(23_000)));
+		assert_eq!(lex.next(), Some(Token::Int(23_000)), "{:?}", lex.slice());
 		assert_eq!(lex.next(), Some(Token::NotEqEq));
 		assert_eq!(lex.next(), Some(Token::Float(22.0)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
-	#[ignore]
 	fn default_import() {
-		let mut lex = Token::lexer("import file1 from './file/path.ts';");
+		let mut lex = Token::lexer(r#"import file1 from "./file/path.ts";"#);
 
 		assert_eq!(lex.next(), Some(Token::Import));
 		assert_eq!(lex.next(), Some(Token::Text("file1".to_string())));
 		assert_eq!(lex.next(), Some(Token::From));
 		assert_eq!(
 			lex.next(),
-			Some(Token::StringSingle("./file/path.ts".to_string()))
+			Some(Token::StringDouble("./file/path.ts".to_string())),
+			"{}",
+			lex.slice()
 		);
 		assert_eq!(lex.next(), Some(Token::SemiColon));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
-	#[ignore]
 	fn named_import() {
 		let mut lex = Token::lexer("import { file1, file2 } from './file/path.ts'");
 
 		assert_eq!(lex.next(), Some(Token::Import));
-		assert_eq!(lex.next(), Some(Token::Import));
+		assert_eq!(lex.next(), Some(Token::BracketCurlyOpen));
+		assert_eq!(lex.next(), Some(Token::Text("file1".to_string())));
+		assert_eq!(lex.next(), Some(Token::Comma));
+		assert_eq!(lex.next(), Some(Token::Text("file2".to_string())));
+		assert_eq!(lex.next(), Some(Token::BracketCurlyClose));
 		assert_eq!(lex.next(), Some(Token::From));
 		assert_eq!(
 			lex.next(),
-			Some(Token::StringSingle("./file/path.ts".to_string()))
+			Some(Token::StringSingle("./file/path.ts".to_string())),
+			"{}",
+			lex.slice()
 		);
 		assert_eq!(lex.next(), None);
 	}
