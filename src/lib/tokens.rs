@@ -177,6 +177,7 @@ pub enum Token {
 	#[token(":")]
 	Colon,
 
+	// TODO: fix import path not found
 	#[regex(r#"'.*'"#, |lex| lex.slice().parse())]
 	StringSingle(String),
 	#[regex(r#"".*""#, |lex| lex.slice().parse())]
