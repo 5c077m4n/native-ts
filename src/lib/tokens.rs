@@ -2,7 +2,7 @@ use logos::{self, Lexer, Logos};
 
 fn get_string_content(lex: &mut Lexer<Token>) -> Option<String> {
 	let lex = lex.slice();
-	let content = lex[1..lex.len() - 1].parse().ok()?;
+	let content: String = lex[1..lex.len() - 1].parse().ok()?;
 	Some(content)
 }
 
@@ -213,7 +213,7 @@ mod tests {
 
 	#[test]
 	fn sanity() {
-		let mut lex = Token::lexer("Some test string.");
+		let mut lex = Token::lexer(r"Some test string.");
 
 		assert_eq!(lex.next(), Some(Token::Text("Some".to_string())));
 		assert_eq!(lex.span(), 0..4);
@@ -236,7 +236,7 @@ mod tests {
 
 	#[test]
 	fn parse_number_basic_int() {
-		let mut lex = Token::lexer("12");
+		let mut lex = Token::lexer(r"12");
 
 		assert_eq!(lex.next(), Some(Token::Int(12)));
 		assert_eq!(lex.next(), None);
@@ -244,7 +244,7 @@ mod tests {
 
 	#[test]
 	fn parse_number_neg_int() {
-		let mut lex = Token::lexer("-12");
+		let mut lex = Token::lexer(r"-12");
 
 		assert_eq!(lex.next(), Some(Token::Int(-12)));
 		assert_eq!(lex.next(), None);
@@ -252,7 +252,7 @@ mod tests {
 
 	#[test]
 	fn parse_number_basic_float() {
-		let mut lex = Token::lexer("12.");
+		let mut lex = Token::lexer(r"12.");
 
 		assert_eq!(lex.next(), Some(Token::Float(12.0)));
 		assert_eq!(lex.next(), None);
@@ -260,7 +260,7 @@ mod tests {
 
 	#[test]
 	fn parse_number_neg_float() {
-		let mut lex = Token::lexer("-12.");
+		let mut lex = Token::lexer(r"-12.");
 
 		assert_eq!(lex.next(), Some(Token::Float(-12.0)));
 		assert_eq!(lex.next(), None);
@@ -269,7 +269,7 @@ mod tests {
 	#[test]
 	#[ignore]
 	fn parse_number_exp_int() {
-		let mut lex = Token::lexer("12e3");
+		let mut lex = Token::lexer(r"12e3");
 
 		assert_eq!(lex.next(), Some(Token::Int(12_000)));
 		assert_eq!(lex.next(), None);
@@ -277,7 +277,7 @@ mod tests {
 
 	#[test]
 	fn parse_number_exp_float() {
-		let mut lex = Token::lexer("13.e2");
+		let mut lex = Token::lexer(r"13.e2");
 
 		assert_eq!(lex.next(), Some(Token::Float(13e2)));
 		assert_eq!(lex.next(), None);
@@ -285,7 +285,7 @@ mod tests {
 
 	#[test]
 	fn parse_number_float() {
-		let mut lex = Token::lexer("123123.");
+		let mut lex = Token::lexer(r"123123.");
 
 		assert_eq!(lex.next(), Some(Token::Float(123123.0)));
 		assert_eq!(lex.next(), None);
@@ -293,7 +293,7 @@ mod tests {
 
 	#[test]
 	fn parse_number_float_2() {
-		let mut lex = Token::lexer("123123.55");
+		let mut lex = Token::lexer(r"123123.55");
 
 		assert_eq!(lex.next(), Some(Token::Float(123123.55)));
 		assert_eq!(lex.next(), None);
@@ -302,16 +302,33 @@ mod tests {
 	#[test]
 	#[ignore]
 	fn parse_expr() {
-		let mut lex = Token::lexer("23e3 !== 22.");
+		let mut lex = Token::lexer(r#"23e3 !== 22."#);
 
-		assert_eq!(lex.next(), Some(Token::Int(23_000)), "{:?}", lex.slice());
+		assert_eq!(lex.next(), Some(Token::Int(23_000)), "{}", lex.slice());
 		assert_eq!(lex.next(), Some(Token::NotEqEq));
 		assert_eq!(lex.next(), Some(Token::Float(22.0)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
-	fn default_import() {
+	fn default_import_star() {
+		let mut lex = Token::lexer(r"import * as testFile from './file/path.ts';");
+
+		assert_eq!(lex.next(), Some(Token::Import));
+		assert_eq!(lex.next(), Some(Token::Mul));
+		assert_eq!(lex.next(), Some(Token::Text("as".to_string())));
+		assert_eq!(lex.next(), Some(Token::Text("testFile".to_string())));
+		assert_eq!(lex.next(), Some(Token::From));
+		assert_eq!(
+			lex.next(),
+			Some(Token::StringSingle("./file/path.ts".to_string()))
+		);
+		assert_eq!(lex.next(), Some(Token::SemiColon));
+		assert_eq!(lex.next(), None);
+	}
+
+	#[test]
+	fn default_import_double_quote() {
 		let mut lex = Token::lexer(r#"import file1 from "./file/path.ts";"#);
 
 		assert_eq!(lex.next(), Some(Token::Import));
@@ -319,9 +336,7 @@ mod tests {
 		assert_eq!(lex.next(), Some(Token::From));
 		assert_eq!(
 			lex.next(),
-			Some(Token::StringDouble("./file/path.ts".to_string())),
-			"{}",
-			lex.slice()
+			Some(Token::StringDouble("./file/path.ts".to_string()))
 		);
 		assert_eq!(lex.next(), Some(Token::SemiColon));
 		assert_eq!(lex.next(), None);
@@ -340,9 +355,7 @@ mod tests {
 		assert_eq!(lex.next(), Some(Token::From));
 		assert_eq!(
 			lex.next(),
-			Some(Token::StringSingle("./file/path.ts".to_string())),
-			"{}",
-			lex.slice()
+			Some(Token::StringSingle("./file/path.ts".to_string()))
 		);
 		assert_eq!(lex.next(), None);
 	}
