@@ -196,13 +196,12 @@ pub enum Token {
 	Text(String),
 
 	// TODO: fix this... (does not find '12e3')
-	#[regex(r"-?\d+(?:e\d+)?", |lex| lex.slice().parse())]
+	#[regex(r"-?\d+(?:e\d+)?", |lex| lex.slice().parse(), priority = 2)]
 	Int(i32),
 	#[regex(r"-?\d+\.\d*(?:e\d+)?", |lex| lex.slice().parse())]
 	Float(f64),
 
 	#[regex(r"[\s\t\n\f]+", logos::skip)]
-	Skip,
 	#[error]
 	Error,
 }
