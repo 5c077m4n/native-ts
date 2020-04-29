@@ -6,3 +6,11 @@ pub async fn parser<'s>(ast_iter: Lexer<'s, Token>) {
 		println!("{:#?}", node);
 	}
 }
+
+#[cfg(test)]
+mod parser_tests {
+	use super::*;
+
+	#[test]
+	fn sanity() {}
+}
