@@ -1,9 +1,19 @@
 use super::tokens::Token;
-use logos::Lexer;
+use logos::{self, Lexer};
 
-pub async fn parser<'s>(ast_iter: Lexer<'s, Token>) {
-	for node in ast_iter {
-		println!("{:#?}", node);
+pub async fn lexer_to_ast<'s>(ast_iter: &mut Lexer<'s, Token>) {
+	while let Some(token) = ast_iter.next() {
+		match token {
+			Token::Error => {
+				eprintln!(
+					"There wan an error in parsing {} in {:?}",
+					ast_iter.slice(),
+					ast_iter.span()
+				);
+				return;
+			}
+			_ => (),
+		}
 	}
 }
 
