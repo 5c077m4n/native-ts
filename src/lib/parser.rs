@@ -1,6 +1,7 @@
 use super::tokens::Token;
 use logos::{self, Lexer};
 
+#[allow(dead_code)]
 pub async fn lexer_to_ast<'s>(ast_iter: &mut Lexer<'s, Token>) {
 	while let Some(token) = ast_iter.next() {
 		match token {
@@ -19,6 +20,7 @@ pub async fn lexer_to_ast<'s>(ast_iter: &mut Lexer<'s, Token>) {
 
 #[cfg(test)]
 mod parser_tests {
+	#[allow(unused_imports)]
 	use super::*;
 
 	#[test]

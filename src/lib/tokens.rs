@@ -207,7 +207,7 @@ pub enum Token {
 }
 
 #[cfg(test)]
-mod tests {
+mod token_tests {
 	use super::*;
 
 	#[test]
