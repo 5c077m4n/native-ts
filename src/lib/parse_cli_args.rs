@@ -16,6 +16,6 @@ pub struct CliArgs {
 	#[structopt(short, long)]
 	pub evaluate: Option<String>,
 
-	#[structopt(parse(from_os_str))]
+	#[structopt(short, long, parse(from_os_str))]
 	pub path: Option<PathBuf>,
 }
