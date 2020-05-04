@@ -17,6 +17,6 @@ pub fn exec(args: &[&str]) -> io::Result<Output> {
 	}
 }
 
-pub fn cargo_run(arg: &str) -> io::Result<Output> {
-	exec(&["cargo", "run", "--", arg])
+pub fn cargo_run(args: &[&str]) -> io::Result<Output> {
+	exec(&[&["cargo", "run", "--"], args].concat())
 }
