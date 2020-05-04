@@ -41,7 +41,7 @@ async fn cli() -> Result<(), Box<dyn std::error::Error>> {
 	} else {
 		loop {
 			print!("> ");
-			let _ = io::stdout().flush();
+			io::stdout().flush()?;
 
 			let mut input = String::new();
 			io::stdin().read_line(&mut input)?;
