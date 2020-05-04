@@ -2,7 +2,7 @@ use super::tokens::Token;
 use logos::{self, Lexer};
 
 #[allow(dead_code)]
-pub async fn lexer_to_ast<'s>(ast_iter: &mut Lexer<'s, Token>) {
+pub async fn lexer_to_ast(ast_iter: &mut Lexer<'_, Token>) {
 	while let Some(token) = ast_iter.next() {
 		match token {
 			Token::Error => {

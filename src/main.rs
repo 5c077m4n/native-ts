@@ -58,7 +58,7 @@ async fn cli() -> Result<(), Box<dyn std::error::Error>> {
 
 #[tokio::main]
 async fn main() {
-	if let Ok(_) = cli().await {
+	if cli().await.is_ok() {
 		std::process::exit(exitcode::OK);
 	} else {
 		std::process::exit(exitcode::DATAERR);
