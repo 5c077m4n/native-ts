@@ -5,7 +5,7 @@ extern crate structopt;
 use std::path::PathBuf;
 use structopt::StructOpt;
 
-#[derive(StructOpt)]
+#[derive(StructOpt, Debug)]
 pub struct CliArgs {
 	#[structopt(short, long)]
 	pub debug: bool,

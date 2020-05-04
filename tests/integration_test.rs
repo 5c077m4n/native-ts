@@ -18,6 +18,7 @@ mod integration_tests {
 	}
 
 	#[test]
+	#[ignore]
 	fn bad_local_file() -> TestResult {
 		let output: Output = common::cargo_run(&["--path", "no/such/file.ts"])?;
 		assert!(exitcode::is_error(output.status.code().unwrap()));
@@ -26,6 +27,7 @@ mod integration_tests {
 	}
 
 	#[test]
+	#[ignore]
 	fn bad_file_ext() -> TestResult {
 		let output: Output = common::cargo_run(&[
 			"--path",

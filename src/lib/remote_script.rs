@@ -1,7 +1,11 @@
+use exitcode;
 use reqwest::{self, StatusCode};
+use std::process;
 
 pub async fn get_remote_script(url: &str) -> Result<String, reqwest::Error> {
-	assert!(url.ends_with(".ts"), "Wrong file type");
+	if !url.ends_with(".ts") {
+		process::exit(exitcode::OSFILE);
+	}
 
 	let response = reqwest::get(url).await?;
 	assert_eq!(response.status(), StatusCode::OK, "Could not get {:?}", url);
