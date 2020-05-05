@@ -6,8 +6,10 @@ use std::io::{self, Write};
 use structopt::StructOpt;
 use tokio::{self, fs};
 use url::Url;
+use std::convert::TryFrom;
 
-async fn cli() -> Result<(), Box<dyn std::error::Error>> {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let args = CliArgs::from_args();
 
 	if let Some(path) = args.path {
@@ -28,8 +30,7 @@ async fn cli() -> Result<(), Box<dyn std::error::Error>> {
 				}
 			}
 		} else {
-			eprintln!("There was an error in parsing the given file URL.");
-			std::process::exit(exitcode::DATAERR);
+			return Err(Box::try_from("There was an error in parsing the given file URL.").unwrap());
 		}
 	} else if let Some(command_to_eval) = args.evaluate {
 		let lex = Token::lexer(&command_to_eval);
@@ -53,13 +54,4 @@ async fn cli() -> Result<(), Box<dyn std::error::Error>> {
 	}
 
 	Ok(())
-}
-
-#[tokio::main]
-async fn main() {
-	if cli().await.is_ok() {
-		std::process::exit(exitcode::OK);
-	} else {
-		std::process::exit(exitcode::DATAERR);
-	}
 }
