@@ -1,6 +1,5 @@
 mod lib;
 
-use exitcode;
 use lib::{parse_cli_args::CliArgs, remote_script, tokens::Token};
 use logos::Logos;
 use std::io::{self, Write};
