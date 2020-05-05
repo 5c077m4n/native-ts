@@ -10,9 +10,9 @@ pub struct Node<'n> {
 }
 
 impl<'n> Node<'n> {
-	fn new() -> Self {
+	pub fn new() -> Self {
 		Node {
-			node_type: "",
+			node_type: "Parent",
 			file_path: ".",
 			column: 0,
 			line: 0,
