@@ -84,6 +84,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
+name = "ci_info"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a19c5f9baeac8a1176ca7fc58a0cc1abadd84d360365a93d1dd31e926f3f502b"
+dependencies = [
+ "envmnt",
+]
+
+[[package]]
 name = "clap"
 version = "2.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -130,10 +139,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "exitcode"
-version = "1.1.2"
+name = "envmnt"
+version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de853764b47027c2e862a995c34978ffa63c1501f2e15f987ba11bd4f9bba193"
+checksum = "5fba7e7d8c007e12db7b3bd6f04b8e47e206c9173d9c75413a042ccc941723c8"
+dependencies = [
+ "fsio",
+ "indexmap",
+]
 
 [[package]]
 name = "fnv"
@@ -155,6 +168,12 @@ name = "foreign-types-shared"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b"
+
+[[package]]
+name = "fsio"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2131cb03096f67334dfba2f0bc46afc5564b08a919d042c6e217e2665741fc54"
 
 [[package]]
 name = "fuchsia-zircon"
@@ -208,6 +227,15 @@ dependencies = [
  "futures-core",
  "futures-task",
  "pin-utils",
+]
+
+[[package]]
+name = "getopts"
+version = "0.2.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "14dbbfd5c71d70241ecf9e6f13737f7b5ce823821063188d7e46c41d371eebd5"
+dependencies = [
+ "unicode-width",
 ]
 
 [[package]]
@@ -532,21 +560,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "native-ts"
-version = "0.0.1"
-dependencies = [
- "exitcode",
- "lazy_static",
- "logos",
- "paw",
- "regex",
- "reqwest",
- "structopt",
- "tokio",
- "url",
-]
-
-[[package]]
 name = "net2"
 version = "0.2.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -555,6 +568,27 @@ dependencies = [
  "cfg-if",
  "libc",
  "winapi 0.3.8",
+]
+
+[[package]]
+name = "nias"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ab250442c86f1850815b5d268639dff018c0627022bc1940eb2d642ca1ce12f0"
+
+[[package]]
+name = "nts"
+version = "0.0.1"
+dependencies = [
+ "lazy_static",
+ "logos",
+ "paw",
+ "regex",
+ "reqwest",
+ "rusty-hook",
+ "structopt",
+ "tokio",
+ "url",
 ]
 
 [[package]]
@@ -831,6 +865,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "rusty-hook"
+version = "0.11.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "27138b73a8ce63ae918707a5e3b57f9b0c0842a57b82f0e43474cf4e3aaf0ff4"
+dependencies = [
+ "ci_info",
+ "getopts",
+ "nias",
+ "toml",
+]
+
+[[package]]
 name = "ryu"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1083,6 +1129,15 @@ dependencies = [
  "log",
  "pin-project-lite",
  "tokio",
+]
+
+[[package]]
+name = "toml"
+version = "0.5.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ffc92d160b1eef40665be3a05630d003936a3bc7da7421277846c2613e92c71a"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
