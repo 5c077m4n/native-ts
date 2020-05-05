@@ -1,5 +1,3 @@
-extern crate structopt;
-
 use std::path::PathBuf;
 use structopt::StructOpt;
 
