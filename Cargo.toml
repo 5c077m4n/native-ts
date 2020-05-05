@@ -1,5 +1,5 @@
 [package]
-name = "native-ts"
+name = "nts"
 version = "0.0.1"
 authors = ["Roee Shapira <roy.shap1@gmail.com>"]
 edition = "2018"
