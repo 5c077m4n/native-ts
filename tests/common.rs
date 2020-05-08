@@ -1,13 +1,9 @@
 #![cfg(test)]
-#![allow(dead_code)]
 
-use std::io;
-use std::process::{Command, Output};
-use tokio::runtime::Runtime;
-
-pub fn setup() -> Result<Runtime, io::Error> {
-	Runtime::new()
-}
+use std::{
+	io,
+	process::{Command, Output},
+};
 
 pub fn exec(args: &[&str]) -> io::Result<Output> {
 	if cfg!(target_os = "windows") {

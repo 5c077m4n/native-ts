@@ -4,9 +4,9 @@ mod common;
 
 mod integration_tests {
 	use super::*;
-	use std::process::Output;
+	use std::{io, process::Output};
 
-	type TestResult = Result<(), Box<dyn std::error::Error>>;
+	type TestResult = io::Result<()>;
 
 	#[test]
 	fn sanity() -> TestResult {
