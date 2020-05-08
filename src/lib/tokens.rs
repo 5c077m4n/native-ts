@@ -140,6 +140,8 @@ pub enum Token {
 	Process,
 	#[token("window")]
 	Window,
+	#[token("console")]
+	Console,
 	#[token("function")]
 	Function,
 	#[token("void")]
@@ -190,7 +192,7 @@ pub enum Token {
 	StringDouble(String),
 	#[regex(r#"`(?s)[^`]*(?-s)`"#, get_string_content)]
 	StringTemplate(String),
-	#[regex(r#"/.+/"#, |lex| lex.slice().parse())]
+	#[regex(r#"/.+/"#, get_string_content)]
 	JsRegex(String),
 	#[regex("[a-zA-Z0-9$_]+", |lex| lex.slice().parse())]
 	Text(String),
@@ -231,6 +233,18 @@ mod token_tests {
 		assert_eq!(lex.slice(), ".");
 
 		assert_eq!(lex.next(), None);
+	}
+
+	#[test]
+	fn parse_console_log() {
+		let mut lex = Token::lexer(r"console.log(123);");
+
+		assert_eq!(lex.next(), Some(Token::Console));
+		assert_eq!(lex.next(), Some(Token::Period));
+		assert_eq!(lex.next(), Some(Token::Text("log".to_owned())));
+		assert_eq!(lex.next(), Some(Token::BracketOpen));
+		assert_eq!(lex.next(), Some(Token::Int(123)));
+		assert_eq!(lex.next(), Some(Token::BracketClose));
 	}
 
 	#[test]

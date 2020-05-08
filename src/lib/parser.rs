@@ -1,23 +1,53 @@
 use super::{ast::Node, tokens::Token};
 use logos::{self, Lexer};
+use std::io::{Error, ErrorKind, Result};
 
 #[allow(dead_code)]
-pub async fn lexer_to_ast<'n>(ast_iter: &mut Lexer<'_, Token>) -> Result<Node<'n>, &'n str> {
-	let root = Node::new();
+pub async fn lexer_to_ast<'n>(ast_iter: &mut Lexer<'_, Token>) -> Result<Node> {
+	let mut root = Node::new();
 
 	while let Some(token) = ast_iter.next() {
 		match token {
 			Token::Error => {
-				eprintln!(
-					"There wan an error parsing {} in {:?}",
-					ast_iter.slice(),
-					ast_iter.span()
-				);
-				return Err("There was an error in parsing the input.");
+				return Err(Error::new(
+					ErrorKind::InvalidInput,
+					format!(
+						"There was an error in parsing the input `{}` @ {:?}.",
+						ast_iter.slice(),
+						ast_iter.span()
+					),
+				));
 			}
-			Token::Import => (),
-			Token::From => (),
-			_ => panic!("Unknown token."),
+			Token::Import => {
+				let new_node = Node {
+					node_type: ast_iter.slice().to_owned(),
+					file_path: "/".to_owned(),
+					column: ast_iter.span().start,
+					line: ast_iter.span().end,
+					children: Vec::new(),
+				};
+				root.add(new_node);
+			}
+			Token::From => {
+				let new_node = Node {
+					node_type: ast_iter.slice().to_owned(),
+					file_path: "/".to_owned(),
+					column: ast_iter.span().start,
+					line: ast_iter.span().end,
+					children: Vec::new(),
+				};
+				root.add(new_node);
+			}
+			_ => {
+				return Err(Error::new(
+					ErrorKind::InvalidInput,
+					format!(
+						"Unknown token `{}` @ {:?}.",
+						ast_iter.slice(),
+						ast_iter.span()
+					),
+				))
+			}
 		}
 	}
 
@@ -30,9 +60,11 @@ mod parser_tests {
 	use logos::Logos;
 
 	#[tokio::test]
+	#[should_panic]
 	async fn sanity() {
-		let lex = &mut Token::lexer("12e3");
-		let lex = lexer_to_ast(lex).await;
-		assert_eq!(lex, Err("There was an error in parsing the input."));
+		let lex = &mut Token::lexer("console.log(12e3);");
+		let _ = lexer_to_ast(lex).await.unwrap();
+
+		assert!(false);
 	}
 }

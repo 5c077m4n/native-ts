@@ -1,26 +1,26 @@
 #![allow(dead_code)]
 
 #[derive(Debug, PartialEq)]
-pub struct Node<'n> {
-	pub node_type: &'n str,
-	pub file_path: &'n str,
+pub struct Node {
+	pub node_type: String,
+	pub file_path: String,
 	pub column: usize,
 	pub line: usize,
-	pub children: Vec<&'n Node<'n>>,
+	pub children: Vec<Node>,
 }
 
-impl<'n> Node<'n> {
+impl Node {
 	pub fn new() -> Self {
 		Node {
-			node_type: "Parent",
-			file_path: ".",
+			node_type: "Parent".to_owned(),
+			file_path: "/".to_owned(),
 			column: 0,
 			line: 0,
 			children: Vec::new(),
 		}
 	}
 
-	fn add(&mut self, child: &'n Node<'n>) -> &Self {
+	pub fn add(&mut self, child: Node) -> &Self {
 		self.children.push(child);
 		self
 	}
@@ -36,7 +36,7 @@ mod ast_tests {
 		assert_eq!(node.children.len(), 0);
 
 		let child_node = Node::new();
-		node.add(&child_node);
+		node.add(child_node);
 		assert_eq!(node.children.len(), 1);
 	}
 }
