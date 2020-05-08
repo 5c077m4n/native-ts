@@ -1,20 +1,20 @@
-use reqwest::{self, StatusCode};
+use reqwest;
+use std::io::{Error, ErrorKind, Result};
 
-pub async fn get_remote_script(url: &str) -> Result<String, reqwest::Error> {
-	assert!(
-		url.ends_with(".ts") || url.ends_with(".js"),
-		"The file does not have the correct extension."
-	);
+pub async fn get_remote_script(url: &str) -> Result<String> {
+	if !url.ends_with(".ts") && !url.ends_with(".js") {
+		return Err(Error::new(ErrorKind::InvalidInput, "Bad file type."));
+	}
 
-	let response = reqwest::get(url).await?;
-	assert_eq!(
-		response.status(),
-		StatusCode::OK,
-		"Could not fetch {:?}",
-		url
-	);
+	let response = reqwest::get(url).await.unwrap();
+	if response.status() != reqwest::StatusCode::OK {
+		return Err(Error::new(
+			ErrorKind::NotFound,
+			format!("Could not fetch {:?}", url),
+		));
+	}
 
-	response.text().await
+	Ok(response.text().await.unwrap())
 }
 
 #[cfg(test)]

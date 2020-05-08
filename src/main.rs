@@ -2,14 +2,13 @@ mod lib;
 
 use lib::{parse_cli_args::CliArgs, remote_script, tokens::Token};
 use logos::Logos;
-use std::io::{self, Write};
+use std::io::{self, Error, ErrorKind, Result, Write};
 use structopt::StructOpt;
 use tokio::{self, fs};
 use url::Url;
-use std::convert::TryFrom;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<()> {
 	let args = CliArgs::from_args();
 
 	if let Some(path) = args.path {
@@ -30,7 +29,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 				}
 			}
 		} else {
-			return Err(Box::try_from("There was an error in parsing the given file URL.").unwrap());
+			return Err(Error::new(
+				ErrorKind::InvalidInput,
+				"There was an error in parsing the given file URL.",
+			));
 		}
 	} else if let Some(command_to_eval) = args.evaluate {
 		let lex = Token::lexer(&command_to_eval);
