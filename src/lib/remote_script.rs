@@ -1,4 +1,3 @@
-use reqwest;
 use std::io::{Error, ErrorKind, Result};
 
 pub async fn get_remote_script(url: &str) -> Result<String> {
