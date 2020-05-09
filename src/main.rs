@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 mod lib;
 
 use lib::{parse_cli_args::CliArgs, remote_script, tokens::Token};
