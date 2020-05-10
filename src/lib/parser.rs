@@ -1,4 +1,5 @@
-use super::{ast::Node, tokens::Token};
+use super::tokens::Token;
+use ast::Node;
 use logos::{self, Lexer};
 use std::io::{Error, ErrorKind, Result};
 
@@ -20,6 +21,7 @@ pub async fn lexer_to_ast<'n>(ast_iter: &mut Lexer<'_, Token>) -> Result<Node> {
 			}
 			Token::Import => {
 				let new_node = Node {
+					raw_value: String::new(),
 					node_type: ast_iter.slice().to_owned(),
 					file_path: "/".to_owned(),
 					column: ast_iter.span().start,
@@ -30,6 +32,7 @@ pub async fn lexer_to_ast<'n>(ast_iter: &mut Lexer<'_, Token>) -> Result<Node> {
 			}
 			Token::From => {
 				let new_node = Node {
+					raw_value: String::new(),
 					node_type: ast_iter.slice().to_owned(),
 					file_path: "/".to_owned(),
 					column: ast_iter.span().start,

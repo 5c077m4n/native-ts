@@ -17,6 +17,10 @@ reqwest = { version = "0.10" }
 url = { version = "2.1.1" }
 regex = { version = "1" }
 lazy_static = { version = "1.4" }
+ast = { path = "./ast" }
 
 [dev-dependencies]
 rusty-hook = { version = "0.11" }
+
+[workspace]
+members = ["ast"]
