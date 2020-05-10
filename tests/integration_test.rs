@@ -16,9 +16,9 @@ mod integration_tests {
 		Ok(())
 	}
 
-	// TODO: fix test failing for linux - the returned error code is wrong
+	// TODO: fix test failing for linux - the returned error code is wrong (0)
 	#[test]
-	#[ignore]
+	#[cfg(target_os = "windows")]
 	fn bad_local_file() -> TestResult {
 		let output: Output = common::cargo_run(&["--path", "no/such/file.ts"])?;
 		assert!(!output.status.success());
@@ -26,9 +26,9 @@ mod integration_tests {
 		Ok(())
 	}
 
-	// TODO: fix test failing for linux - the returned error code is wrong
+	// TODO: fix test failing for linux - the returned error code is wrong (0)
 	#[test]
-	#[ignore]
+	#[cfg(target_os = "windows")]
 	fn bad_file_ext() -> TestResult {
 		let output: Output = common::cargo_run(&[
 			"--path",
