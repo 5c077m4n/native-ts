@@ -26,7 +26,7 @@ checksum = "b585a98a234c46fc563103e9278c9391fde1f4e6850334da895d27edb9580f62"
 
 [[package]]
 name = "ast"
-version = "0.1.0"
+version = "0.0.1"
 
 [[package]]
 name = "atty"
