@@ -7,7 +7,7 @@ on:
   push:
     paths:
       - "**/*.rs"
-      - "**/clippy.yml"
+      - ".github/workflows/clippy.yml"
 
 jobs:
   clippy_check:
