@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Default, PartialEq)]
 pub struct Node {
 	pub raw_value: String,
 	pub node_type: String,
@@ -11,17 +11,6 @@ pub struct Node {
 }
 
 impl Node {
-	pub fn new() -> Self {
-		Node {
-			raw_value: String::new(),
-			node_type: "Parent".to_owned(),
-			file_path: "/".to_owned(),
-			column: 0,
-			line: 0,
-			children: Vec::new(),
-		}
-	}
-
 	pub fn add(&mut self, child: Node) -> &Self {
 		self.children.push(child);
 		self
@@ -34,10 +23,10 @@ mod ast_tests {
 
 	#[test]
 	fn sanity() {
-		let mut node = Node::new();
+		let mut node: Node = Default::default();
 		assert_eq!(node.children.len(), 0);
 
-		let child_node = Node::new();
+		let child_node: Node = Default::default();
 		node.add(child_node);
 		assert_eq!(node.children.len(), 1);
 	}

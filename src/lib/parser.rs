@@ -5,7 +5,7 @@ use std::io::{Error, ErrorKind, Result};
 
 #[allow(dead_code)]
 pub async fn lexer_to_ast<'n>(ast_iter: &mut Lexer<'_, Token>) -> Result<Node> {
-	let mut root = Node::new();
+	let mut root: Node = Default::default();
 
 	while let Some(token) = ast_iter.next() {
 		match token {

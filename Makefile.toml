@@ -9,7 +9,7 @@ args = ["fmt", "--", "--emit=files"]
 [tasks.clippy]
 install_crate = "clippy"
 command = "cargo"
-args = ["clippy"]
+args = ["clippy", "--all-targets", "--all-features"]
 
 [tasks.clean]
 command = "cargo"

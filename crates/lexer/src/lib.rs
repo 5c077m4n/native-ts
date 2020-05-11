@@ -300,7 +300,7 @@ mod token_tests {
 	fn parse_number_float() {
 		let mut lex = Token::lexer(r"123123.");
 
-		assert_eq!(lex.next(), Some(Token::Float(123123.0)));
+		assert_eq!(lex.next(), Some(Token::Float(123_123.0)));
 		assert_eq!(lex.next(), None);
 	}
 
@@ -308,7 +308,7 @@ mod token_tests {
 	fn parse_number_float_2() {
 		let mut lex = Token::lexer(r"123123.55");
 
-		assert_eq!(lex.next(), Some(Token::Float(123123.55)));
+		assert_eq!(lex.next(), Some(Token::Float(123_123.55)));
 		assert_eq!(lex.next(), None);
 	}
 
