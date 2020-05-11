@@ -57,7 +57,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: --debug cargo-make
+          args: --force --debug cargo-make
 
       - name: Run tests
         uses: actions-rs/cargo@v1
