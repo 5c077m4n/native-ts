@@ -25,22 +25,32 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Cache cargo registry
         uses: actions/cache@v1
         with:
           path: ~/.cargo/registry
           key: ${{ runner.os }}-cargo-registry-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+
       - name: Cache cargo index
         uses: actions/cache@v1
         with:
           path: ~/.cargo/git
           key: ${{ runner.os }}-cargo-index-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+
       - name: Cache cargo build
         uses: actions/cache@v1
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
-      - name: Build
-        run: cargo build
+
+      - name: Cache cargo bin
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ matrix.rust }}
+
+      - run: cargo install cargo-make
+
       - name: Run tests
-        run: cargo test --workspace
+        run: cargo make ci-test
