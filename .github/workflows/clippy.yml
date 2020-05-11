@@ -44,7 +44,7 @@ jobs:
           command: install
           args: --debug cargo-make
 
-      - name: Run tests
+      - name: Run clippy
         uses: actions-rs/cargo@v1
         with:
           command: make
