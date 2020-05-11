@@ -1,10 +1,13 @@
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = "true"
+
 [tasks.ci-build]
 command = "cargo"
 args = ["build", "-vv", "--all-features"]
 
 [tasks.ci-test]
 command = "cargo"
-args = ["test", "-vv", "--workspace", "--all-features"]
+args = ["test", "-vv", "--all-features"]
 dependencies = ["ci-build"]
 
 [tasks.format]
