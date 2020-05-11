@@ -1,5 +1,5 @@
-use super::tokens::Token;
 use ast::Node;
+use lexer::Token;
 use logos::{self, Lexer};
 use std::io::{Error, ErrorKind, Result};
 
