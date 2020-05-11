@@ -1,0 +1,22 @@
+[tasks.build]
+command = "cargo"
+args = ["build", "-vv", "--all-features"]
+
+[tasks.test]
+command = "cargo"
+args = ["test", "-vv", "--workspace", "--all-features"]
+dependencies = ["ci-build"]
+
+[tasks.format]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--", "--emit=files"]
+
+[tasks.clippy]
+install_crate = "clippy"
+command = "cargo"
+args = ["clippy"]
+
+[tasks.clean]
+command = "cargo"
+args = ["clean"]
