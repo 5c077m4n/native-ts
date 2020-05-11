@@ -4,12 +4,8 @@ env:
   CLICOLOR_FORCE: 1
 
 on:
-  push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
-      - master
+  - push
+  - pull_request
 
 jobs:
   build:
@@ -33,19 +29,19 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.cargo/registry
-          key: tests__${{ runner.os }}-cargo-registry-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+          key: tests__${{ runner.os }}-cargo-registry-${{ matrix.rust }}__${{ hashFiles('**/Cargo.lock') }}
 
       - name: Cache cargo index
         uses: actions/cache@v1
         with:
           path: ~/.cargo/git
-          key: tests__${{ runner.os }}-cargo-index-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+          key: tests__${{ runner.os }}-cargo-index-${{ matrix.rust }}__${{ hashFiles('**/Cargo.lock') }}
 
       - name: Cache cargo build
         uses: actions/cache@v1
         with:
           path: target
-          key: tests__${{ runner.os }}-cargo-build-target-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+          key: tests__${{ runner.os }}-cargo-build-target-${{ matrix.rust }}__${{ hashFiles('**/Cargo.lock') }}
 
       - name: Cache cargo bin
         uses: actions/cache@v1
