@@ -1,8 +1,0 @@
-[tasks.ci-build]
-command = "cargo"
-args = ["build", "-vv", "--all-features"]
-
-[tasks.ci-test]
-command = "cargo"
-args = ["test", "-vv", "--all-features"]
-dependencies = ["ci-build"]
