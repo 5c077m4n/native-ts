@@ -1,5 +1,8 @@
 name: Clippy Check
 
+env:
+  CLICOLOR_FORCE: 1
+
 on:
   push:
     paths:
@@ -35,7 +38,14 @@ jobs:
           path: ~/.cargo/bin
           key: clippy__${{ runner.os }}-cargo-bin-${{ matrix.rust }}
 
-      - run: cargo install cargo-make
+      - name: Install cargo-make
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: --debug cargo-make
 
-      - name: Run clippy
-        run: cargo make clippy
+      - name: Run tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: clippy
