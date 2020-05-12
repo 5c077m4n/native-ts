@@ -164,12 +164,6 @@ pub enum Token {
 	Class,
 	#[token("interface")]
 	Interface,
-	#[token("import ")]
-	Import,
-	#[token("export ")]
-	Export,
-	#[token("from ")]
-	From,
 
 	#[regex(r#"<[a-zA-Z\s_='"-]+></[a-zA-Z-]+\s?/>"#, |lex| lex.slice().parse())]
 	HtmlTag(String),
@@ -320,56 +314,6 @@ mod token_tests {
 		assert_eq!(lex.next(), Some(Token::Int(23_000)), "{}", lex.slice());
 		assert_eq!(lex.next(), Some(Token::NotEqEq));
 		assert_eq!(lex.next(), Some(Token::Float(22.0)));
-		assert_eq!(lex.next(), None);
-	}
-
-	#[test]
-	fn default_import_star() {
-		let mut lex = Token::lexer(r"import * as testFile from './file/path.ts';");
-
-		assert_eq!(lex.next(), Some(Token::Import));
-		assert_eq!(lex.next(), Some(Token::Mul));
-		assert_eq!(lex.next(), Some(Token::Text("as".to_string())));
-		assert_eq!(lex.next(), Some(Token::Text("testFile".to_string())));
-		assert_eq!(lex.next(), Some(Token::From));
-		assert_eq!(
-			lex.next(),
-			Some(Token::StringSingle("./file/path.ts".to_string()))
-		);
-		assert_eq!(lex.next(), Some(Token::SemiColon));
-		assert_eq!(lex.next(), None);
-	}
-
-	#[test]
-	fn default_import_double_quote() {
-		let mut lex = Token::lexer(r#"import file1 from "./file/path.ts";"#);
-
-		assert_eq!(lex.next(), Some(Token::Import));
-		assert_eq!(lex.next(), Some(Token::Text("file1".to_string())));
-		assert_eq!(lex.next(), Some(Token::From));
-		assert_eq!(
-			lex.next(),
-			Some(Token::StringDouble("./file/path.ts".to_string()))
-		);
-		assert_eq!(lex.next(), Some(Token::SemiColon));
-		assert_eq!(lex.next(), None);
-	}
-
-	#[test]
-	fn named_import() {
-		let mut lex = Token::lexer("import { file1, file2 } from './file/path.ts'");
-
-		assert_eq!(lex.next(), Some(Token::Import));
-		assert_eq!(lex.next(), Some(Token::BracketCurlyOpen));
-		assert_eq!(lex.next(), Some(Token::Text("file1".to_string())));
-		assert_eq!(lex.next(), Some(Token::Comma));
-		assert_eq!(lex.next(), Some(Token::Text("file2".to_string())));
-		assert_eq!(lex.next(), Some(Token::BracketCurlyClose));
-		assert_eq!(lex.next(), Some(Token::From));
-		assert_eq!(
-			lex.next(),
-			Some(Token::StringSingle("./file/path.ts".to_string()))
-		);
 		assert_eq!(lex.next(), None);
 	}
 }

@@ -5,7 +5,7 @@ use std::io::{Error, ErrorKind, Result};
 
 #[allow(dead_code)]
 pub async fn lexer_to_ast<'n>(ast_iter: &mut Lexer<'_, Token>) -> Result<Node> {
-	let mut root: Node = Default::default();
+	let root: Node = Default::default();
 
 	while let Some(token) = ast_iter.next() {
 		match token {
@@ -18,16 +18,6 @@ pub async fn lexer_to_ast<'n>(ast_iter: &mut Lexer<'_, Token>) -> Result<Node> {
 						ast_iter.span()
 					),
 				));
-			}
-			Token::Import => {
-				let mut new_node: Node = Default::default();
-				new_node.file_path = "/".to_owned();
-				root.add(new_node);
-			}
-			Token::From => {
-				let mut new_node: Node = Default::default();
-				new_node.file_path = "/".to_owned();
-				root.add(new_node);
 			}
 			_ => {
 				return Err(Error::new(
