@@ -16,6 +16,8 @@ pub enum ImportToken {
 	#[token("as")]
 	As,
 
+	#[token("*")]
+	Star,
 	#[token(".")]
 	Period,
 	#[token(",")]
