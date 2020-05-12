@@ -43,13 +43,11 @@ mod import_token_tests {
 		let mut lex = ImportToken::lexer("import qwerty from './path/to/local/file.js'");
 
 		assert_eq!(lex.next(), Some(ImportToken::Import));
-		assert_eq!(lex.slice(), "import ");
 
 		assert_eq!(lex.next(), Some(ImportToken::Text));
 		assert_eq!(lex.slice(), "qwerty");
 
 		assert_eq!(lex.next(), Some(ImportToken::From));
-		assert_eq!(lex.slice(), "from ");
 
 		assert_eq!(lex.next(), Some(ImportToken::Text));
 		assert_eq!(lex.slice(), "'./path/to/local/file.js'");
@@ -62,7 +60,6 @@ mod import_token_tests {
 		let mut lex = ImportToken::lexer("import { qwerty } from './path/to/local/file.js'");
 
 		assert_eq!(lex.next(), Some(ImportToken::Import));
-		assert_eq!(lex.slice(), "import ");
 
 		assert_eq!(lex.next(), Some(ImportToken::BracketCurlyOpen));
 
@@ -72,7 +69,6 @@ mod import_token_tests {
 		assert_eq!(lex.next(), Some(ImportToken::BracketCurlyClose));
 
 		assert_eq!(lex.next(), Some(ImportToken::From));
-		assert_eq!(lex.slice(), "from ");
 
 		assert_eq!(lex.next(), Some(ImportToken::Text));
 		assert_eq!(lex.slice(), "'./path/to/local/file.js'");
@@ -85,7 +81,6 @@ mod import_token_tests {
 		let mut lex = ImportToken::lexer("import { fn1, fn2 } from './path/to/local/file.js'");
 
 		assert_eq!(lex.next(), Some(ImportToken::Import));
-		assert_eq!(lex.slice(), "import ");
 
 		assert_eq!(lex.next(), Some(ImportToken::BracketCurlyOpen));
 
@@ -100,7 +95,6 @@ mod import_token_tests {
 		assert_eq!(lex.next(), Some(ImportToken::BracketCurlyClose));
 
 		assert_eq!(lex.next(), Some(ImportToken::From));
-		assert_eq!(lex.slice(), "from ");
 
 		assert_eq!(lex.next(), Some(ImportToken::Text));
 		assert_eq!(lex.slice(), "'./path/to/local/file.js'");
