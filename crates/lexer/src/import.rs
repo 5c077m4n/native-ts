@@ -11,9 +11,9 @@ pub enum ImportToken {
 	Import,
 	#[token("export ")]
 	Export,
-	#[token("from ")]
+	#[token(" from ")]
 	From,
-	#[token("as")]
+	#[token(" as ")]
 	As,
 
 	#[token("*")]
@@ -101,6 +101,27 @@ mod import_token_tests {
 
 		assert_eq!(lex.next(), Some(ImportToken::From));
 		assert_eq!(lex.slice(), "from ");
+
+		assert_eq!(lex.next(), Some(ImportToken::Text));
+		assert_eq!(lex.slice(), "'./path/to/local/file.js'");
+
+		assert_eq!(lex.next(), None);
+	}
+
+	#[test]
+	fn test_star_as_import() {
+		let mut lex = ImportToken::lexer("import * as All from './path/to/local/file.js'");
+
+		assert_eq!(lex.next(), Some(ImportToken::Import));
+
+		assert_eq!(lex.next(), Some(ImportToken::Star));
+
+		assert_eq!(lex.next(), Some(ImportToken::As));
+
+		assert_eq!(lex.next(), Some(ImportToken::Text));
+		assert_eq!(lex.slice(), "All");
+
+		assert_eq!(lex.next(), Some(ImportToken::From));
 
 		assert_eq!(lex.next(), Some(ImportToken::Text));
 		assert_eq!(lex.slice(), "'./path/to/local/file.js'");
