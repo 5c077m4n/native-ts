@@ -2,7 +2,7 @@
 
 mod lib;
 
-use lexer::Token;
+use lexer::token::Token;
 use lib::{parse_cli_args::CliArgs, remote_script};
 use logos::Logos;
 use std::io::{self, Error, ErrorKind, Result, Write};
