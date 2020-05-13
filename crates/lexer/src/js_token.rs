@@ -1,13 +1,13 @@
 use logos::{self, Lexer, Logos};
 
-fn get_string_content(lex: &mut Lexer<Token>) -> Option<String> {
+fn get_string_content(lex: &mut Lexer<JsToken>) -> Option<String> {
 	let lex = lex.slice();
 	let content: String = lex[1..lex.len() - 1].parse().ok()?;
 	Some(content)
 }
 
 #[derive(Logos, Debug, PartialEq)]
-pub enum Token {
+pub enum JsToken {
 	#[token("==")]
 	EqEq,
 	#[token("!=")]
@@ -208,21 +208,21 @@ mod token_tests {
 
 	#[test]
 	fn sanity() {
-		let mut lex = Token::lexer(r"Some test string.");
+		let mut lex = JsToken::lexer(r"Some test string.");
 
-		assert_eq!(lex.next(), Some(Token::Text("Some".to_string())));
+		assert_eq!(lex.next(), Some(JsToken::Text("Some".to_string())));
 		assert_eq!(lex.span(), 0..4);
 		assert_eq!(lex.slice(), "Some");
 
-		assert_eq!(lex.next(), Some(Token::Text("test".to_string())));
+		assert_eq!(lex.next(), Some(JsToken::Text("test".to_string())));
 		assert_eq!(lex.span(), 5..9);
 		assert_eq!(lex.slice(), "test");
 
-		assert_eq!(lex.next(), Some(Token::Text("string".to_string())));
+		assert_eq!(lex.next(), Some(JsToken::Text("string".to_string())));
 		assert_eq!(lex.span(), 10..16);
 		assert_eq!(lex.slice(), "string");
 
-		assert_eq!(lex.next(), Some(Token::Period));
+		assert_eq!(lex.next(), Some(JsToken::Period));
 		assert_eq!(lex.span(), 16..17);
 		assert_eq!(lex.slice(), ".");
 
@@ -231,89 +231,89 @@ mod token_tests {
 
 	#[test]
 	fn parse_console_log() {
-		let mut lex = Token::lexer(r"console.log(123);");
+		let mut lex = JsToken::lexer(r"console.log(123);");
 
-		assert_eq!(lex.next(), Some(Token::Console));
-		assert_eq!(lex.next(), Some(Token::Period));
-		assert_eq!(lex.next(), Some(Token::Text("log".to_owned())));
-		assert_eq!(lex.next(), Some(Token::BracketOpen));
-		assert_eq!(lex.next(), Some(Token::Int(123)));
-		assert_eq!(lex.next(), Some(Token::BracketClose));
+		assert_eq!(lex.next(), Some(JsToken::Console));
+		assert_eq!(lex.next(), Some(JsToken::Period));
+		assert_eq!(lex.next(), Some(JsToken::Text("log".to_owned())));
+		assert_eq!(lex.next(), Some(JsToken::BracketOpen));
+		assert_eq!(lex.next(), Some(JsToken::Int(123)));
+		assert_eq!(lex.next(), Some(JsToken::BracketClose));
 	}
 
 	#[test]
 	fn parse_number_basic_int() {
-		let mut lex = Token::lexer(r"12");
+		let mut lex = JsToken::lexer(r"12");
 
-		assert_eq!(lex.next(), Some(Token::Int(12)));
+		assert_eq!(lex.next(), Some(JsToken::Int(12)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
 	fn parse_number_neg_int() {
-		let mut lex = Token::lexer(r"-12");
+		let mut lex = JsToken::lexer(r"-12");
 
-		assert_eq!(lex.next(), Some(Token::Int(-12)));
+		assert_eq!(lex.next(), Some(JsToken::Int(-12)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
 	fn parse_number_basic_float() {
-		let mut lex = Token::lexer(r"12.");
+		let mut lex = JsToken::lexer(r"12.");
 
-		assert_eq!(lex.next(), Some(Token::Float(12.0)));
+		assert_eq!(lex.next(), Some(JsToken::Float(12.0)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
 	fn parse_number_neg_float() {
-		let mut lex = Token::lexer(r"-12.");
+		let mut lex = JsToken::lexer(r"-12.");
 
-		assert_eq!(lex.next(), Some(Token::Float(-12.0)));
+		assert_eq!(lex.next(), Some(JsToken::Float(-12.0)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
 	#[ignore]
 	fn parse_number_exp_int() {
-		let mut lex = Token::lexer(r"12e3");
+		let mut lex = JsToken::lexer(r"12e3");
 
-		assert_eq!(lex.next(), Some(Token::Int(12_000)));
+		assert_eq!(lex.next(), Some(JsToken::Int(12_000)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
 	fn parse_number_exp_float() {
-		let mut lex = Token::lexer(r"13.e2");
+		let mut lex = JsToken::lexer(r"13.e2");
 
-		assert_eq!(lex.next(), Some(Token::Float(13e2)));
+		assert_eq!(lex.next(), Some(JsToken::Float(13e2)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
 	fn parse_number_float() {
-		let mut lex = Token::lexer(r"123123.");
+		let mut lex = JsToken::lexer(r"123123.");
 
-		assert_eq!(lex.next(), Some(Token::Float(123_123.0)));
+		assert_eq!(lex.next(), Some(JsToken::Float(123_123.0)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
 	fn parse_number_float_2() {
-		let mut lex = Token::lexer(r"123123.55");
+		let mut lex = JsToken::lexer(r"123123.55");
 
-		assert_eq!(lex.next(), Some(Token::Float(123_123.55)));
+		assert_eq!(lex.next(), Some(JsToken::Float(123_123.55)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
 	#[ignore]
 	fn parse_expr() {
-		let mut lex = Token::lexer(r#"23e3 !== 22."#);
+		let mut lex = JsToken::lexer(r#"23e3 !== 22."#);
 
-		assert_eq!(lex.next(), Some(Token::Int(23_000)), "{}", lex.slice());
-		assert_eq!(lex.next(), Some(Token::NotEqEq));
-		assert_eq!(lex.next(), Some(Token::Float(22.0)));
+		assert_eq!(lex.next(), Some(JsToken::Int(23_000)), "{}", lex.slice());
+		assert_eq!(lex.next(), Some(JsToken::NotEqEq));
+		assert_eq!(lex.next(), Some(JsToken::Float(22.0)));
 		assert_eq!(lex.next(), None);
 	}
 }

@@ -1,15 +1,15 @@
 use ast::Node;
-use lexer::token::Token;
+use lexer::js_token::JsToken;
 use logos::{self, Lexer};
 use std::io::{Error, ErrorKind, Result};
 
 #[allow(dead_code)]
-pub async fn lexer_to_ast<'n>(ast_iter: &mut Lexer<'_, Token>) -> Result<Node> {
-	let root: Node = Default::default();
+pub async fn lexer_to_ast(ast_iter: &mut Lexer<'_, JsToken>) -> Result<Box<Node>> {
+	let root = Node::new();
 
 	while let Some(token) = ast_iter.next() {
 		match token {
-			Token::Error => {
+			JsToken::Error => {
 				return Err(Error::new(
 					ErrorKind::InvalidInput,
 					format!(
@@ -43,7 +43,7 @@ mod parser_tests {
 	#[tokio::test]
 	#[should_panic]
 	async fn sanity() {
-		let lex = &mut Token::lexer("console.log(12e3);");
+		let lex = &mut JsToken::lexer("console.log(12e3);");
 		let _ = lexer_to_ast(lex).await.unwrap();
 
 		assert!(false);
