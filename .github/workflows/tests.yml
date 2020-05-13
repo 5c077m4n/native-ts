@@ -8,7 +8,7 @@ on:
   - pull_request
 
 jobs:
-  build:
+  full_test_suite:
     strategy:
       fail-fast: false
       matrix:
