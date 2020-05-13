@@ -8,6 +8,9 @@ pub async fn import_tokens_to_ast(ast_iter: &mut Lexer<'_, ImportToken>) -> Resu
 
 	while let Some(token) = ast_iter.next() {
 		match token {
+			ImportToken::Import => (),
+			ImportToken::From => (),
+			ImportToken::Text => (),
 			ImportToken::Error => {
 				return Err(Error::new(
 					ErrorKind::InvalidInput,
@@ -45,6 +48,6 @@ mod parser_tests {
 		let mut lex = ImportToken::lexer("console.log(123);");
 		let _ = import_tokens_to_ast(&mut lex).await.unwrap();
 
-		assert!(false);
+		unreachable!();
 	}
 }

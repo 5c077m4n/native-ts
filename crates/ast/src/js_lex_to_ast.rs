@@ -8,6 +8,7 @@ pub async fn js_tokens_to_ast(ast_iter: &mut Lexer<'_, JsToken>) -> Result<Box<N
 
 	while let Some(token) = ast_iter.next() {
 		match token {
+			JsToken::Const => (),
 			JsToken::Error => {
 				return Err(Error::new(
 					ErrorKind::InvalidInput,
@@ -45,6 +46,6 @@ mod parser_tests {
 		let mut lex = JsToken::lexer("import { fn1 } from 'no/path/file.ts';");
 		let _ = js_tokens_to_ast(&mut lex).await.unwrap();
 
-		assert!(false);
+		unreachable!();
 	}
 }

@@ -5,11 +5,11 @@ pub struct Node {
 	pub file_path: String,
 	pub column: usize,
 	pub line: usize,
-	pub children: Vec<Box<Node>>,
+	pub children: Vec<Node>,
 }
 
 impl Node {
-	pub fn add(&mut self, child: Box<Node>) -> &Self {
+	pub fn add(&mut self, child: Node) -> &Self {
 		self.children.push(child);
 		self
 	}
@@ -26,10 +26,10 @@ mod ast_tests {
 
 	#[test]
 	fn sanity() {
-		let mut node = Node::new();
+		let mut node: Node = Default::default();
 		assert_eq!(node.children.len(), 0);
 
-		let child_node = Node::new();
+		let child_node: Node = Default::default();
 		node.add(child_node);
 		assert_eq!(node.children.len(), 1);
 	}
