@@ -4,7 +4,7 @@ use logos::Lexer;
 use std::io::{Error, ErrorKind, Result};
 
 pub async fn js_tokens_to_ast(ast_iter: &mut Lexer<'_, JsToken>) -> Result<Box<Node>> {
-	let root = Node::new();
+	let root = Node::boxed();
 
 	while let Some(token) = ast_iter.next() {
 		match token {
@@ -41,7 +41,7 @@ mod parser_tests {
 	use logos::Logos;
 
 	#[tokio::test]
-	#[should_panic]
+	#[should_panic(expected = "Unknown token `import` @ 0..6.")]
 	async fn sanity() {
 		let mut lex = JsToken::lexer("import { fn1 } from 'no/path/file.ts';");
 		let _ = js_tokens_to_ast(&mut lex).await.unwrap();

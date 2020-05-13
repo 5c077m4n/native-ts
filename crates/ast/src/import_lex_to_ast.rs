@@ -4,7 +4,7 @@ use logos::Lexer;
 use std::io::{Error, ErrorKind, Result};
 
 pub async fn import_tokens_to_ast(ast_iter: &mut Lexer<'_, ImportToken>) -> Result<Box<Node>> {
-	let root = Node::new();
+	let root = Node::boxed();
 
 	while let Some(token) = ast_iter.next() {
 		match token {
@@ -43,7 +43,7 @@ mod parser_tests {
 	use logos::Logos;
 
 	#[tokio::test]
-	#[should_panic]
+	#[should_panic(expected = "There was an error in parsing the input `(` @ 11..12.")]
 	async fn sanity() {
 		let mut lex = ImportToken::lexer("console.log(123);");
 		let _ = import_tokens_to_ast(&mut lex).await.unwrap();

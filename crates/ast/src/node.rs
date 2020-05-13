@@ -14,7 +14,7 @@ impl Node {
 		self
 	}
 
-	pub fn new() -> Box<Self> {
+	pub fn boxed() -> Box<Self> {
 		let new_node = Default::default();
 		Box::new(new_node)
 	}
