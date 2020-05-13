@@ -1,7 +1,7 @@
-use lexer::{js_token::JsToken, import_token::ImportToken};
 use ast::{import_lex_to_ast::import_tokens_to_ast, js_lex_to_ast::js_tokens_to_ast};
-use std::io::Result;
+use lexer::{import_token::ImportToken, js_token::JsToken};
 use logos::Logos;
+use std::io::Result;
 
 #[allow(dead_code)]
 pub async fn parse(script: &str) -> Result<()> {
@@ -18,7 +18,7 @@ pub async fn parse(script: &str) -> Result<()> {
 	for token in js_lex.spanned() {
 		println!("{:?}", token);
 	}
-	
+
 	Ok(())
 }
 
