@@ -8,15 +8,29 @@ pub struct Node {
 	pub children: Vec<Node>,
 }
 
+pub type BoxedNode = Box<Node>;
+pub type BoxedOptionalNode = Box<Option<Node>>;
+pub type BoxedVecNode = Box<Vec<Node>>;
+
 impl Node {
 	pub fn add(&mut self, child: Node) -> &Self {
 		self.children.push(child);
 		self
 	}
 
-	pub fn boxed() -> Box<Self> {
-		let new_node = Default::default();
+	pub fn boxed() -> BoxedNode {
+		let new_node: Self = Default::default();
 		Box::new(new_node)
+	}
+
+	pub fn boxed_option() -> BoxedOptionalNode {
+		let new_node: Self = Default::default();
+		Box::new(Some(new_node))
+	}
+
+	pub fn boxed_vec() -> BoxedVecNode {
+		let new_node_list: Vec<Self> = Vec::new();
+		Box::new(new_node_list)
 	}
 }
 
