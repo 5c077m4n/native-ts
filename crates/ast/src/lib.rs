@@ -1,3 +1,5 @@
-pub mod import_lex_to_ast;
-pub mod js_lex_to_ast;
-pub mod node;
+mod lex_to_ast;
+mod types;
+
+pub use lex_to_ast::{import_tokens_to_ast, js_tokens_to_ast};
+pub use types::{ExpressionType, Node};

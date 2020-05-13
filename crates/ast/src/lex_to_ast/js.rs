@@ -1,17 +1,15 @@
-use super::node::Node;
-use lexer::import_token::ImportToken;
+use super::Node;
+use lexer::JsToken;
 use logos::Lexer;
 use std::io::{Error, ErrorKind, Result};
 
-pub async fn import_tokens_to_ast(ast_iter: &mut Lexer<'_, ImportToken>) -> Result<Box<Node>> {
+pub async fn js_tokens_to_ast(ast_iter: &mut Lexer<'_, JsToken>) -> Result<Box<Node>> {
 	let root = Node::boxed();
 
 	while let Some(token) = ast_iter.next() {
 		match token {
-			ImportToken::Import => (),
-			ImportToken::From => (),
-			ImportToken::Text => (),
-			ImportToken::Error => {
+			JsToken::Const => (),
+			JsToken::Error => {
 				return Err(Error::new(
 					ErrorKind::InvalidInput,
 					format!(
@@ -43,10 +41,10 @@ mod parser_tests {
 	use logos::Logos;
 
 	#[tokio::test]
-	#[should_panic(expected = "There was an error in parsing the input `(` @ 11..12.")]
+	#[should_panic(expected = "Unknown token `import` @ 0..6.")]
 	async fn sanity() {
-		let mut lex = ImportToken::lexer("console.log(123);");
-		let _ = import_tokens_to_ast(&mut lex).await.unwrap();
+		let mut lex = JsToken::lexer("import { fn1 } from 'no/path/file.ts';");
+		let _ = js_tokens_to_ast(&mut lex).await.unwrap();
 
 		unreachable!();
 	}

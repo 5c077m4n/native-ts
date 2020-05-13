@@ -1,2 +1,3 @@
-pub mod import_token;
-pub mod js_token;
+mod tokens;
+
+pub use tokens::{ImportToken, JsToken};

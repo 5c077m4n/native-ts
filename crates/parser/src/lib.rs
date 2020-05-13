@@ -1,5 +1,5 @@
-use ast::{import_lex_to_ast::import_tokens_to_ast, js_lex_to_ast::js_tokens_to_ast};
-use lexer::{import_token::ImportToken, js_token::JsToken};
+use ast::{import_tokens_to_ast, js_tokens_to_ast};
+use lexer::{ImportToken, JsToken};
 use logos::Logos;
 use std::io::Result;
 
