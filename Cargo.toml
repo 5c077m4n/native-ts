@@ -10,7 +10,6 @@ publish = false
 
 [dependencies]
 tokio = { version = "0.2", features = ["macros", "rt-threaded", "fs"] }
-logos = { version = "0.11" }
 structopt = { version = "0.3", features = [ "paw" ] }
 paw = { version = "1.0" }
 reqwest = { version = "0.10" }
