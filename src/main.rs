@@ -2,9 +2,8 @@
 
 mod lib;
 
-use lexer::js_token::JsToken;
 use lib::{parse_cli_args::CliArgs, remote_script};
-use logos::Logos;
+use parser::parse;
 use std::io::{self, Error, ErrorKind, Result, Write};
 use structopt::StructOpt;
 use tokio::{self, fs};
@@ -18,18 +17,10 @@ async fn main() -> Result<()> {
 		if let Some(path) = path.to_str() {
 			if let Ok(remote_path) = Url::parse(path) {
 				let remote_script = remote_script::get_remote_script(remote_path.as_str()).await?;
-				let lex = JsToken::lexer(&remote_script);
-
-				for token in lex.spanned() {
-					println!("{:?}", token);
-				}
+				parse(&remote_script).await?;
 			} else {
 				let local_script = fs::read_to_string(path).await?;
-				let lex = JsToken::lexer(&local_script);
-
-				for token in lex.spanned() {
-					println!("{:?}", token);
-				}
+				parse(&local_script).await?;
 			}
 		} else {
 			return Err(Error::new(
@@ -38,11 +29,7 @@ async fn main() -> Result<()> {
 			));
 		}
 	} else if let Some(command_to_eval) = args.evaluate {
-		let lex = JsToken::lexer(&command_to_eval);
-
-		for token in lex.spanned() {
-			println!("{:?}", token);
-		}
+		parse(&command_to_eval).await?;
 	} else {
 		loop {
 			print!("> ");
@@ -51,10 +38,7 @@ async fn main() -> Result<()> {
 			let mut input = String::new();
 			io::stdin().read_line(&mut input)?;
 
-			let lex = JsToken::lexer(&input);
-			for token in lex.spanned() {
-				println!("{:?}", token);
-			}
+			parse(&input).await?;
 		}
 	}
 

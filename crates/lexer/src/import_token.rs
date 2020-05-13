@@ -1,4 +1,4 @@
-use logos::{self, Logos};
+use logos::Logos;
 
 #[derive(Logos, Debug, PartialEq)]
 pub enum ImportToken {
