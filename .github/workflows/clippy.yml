@@ -9,8 +9,9 @@ on:
       - "**/*.rs"
       - ".github/workflows/clippy.yml"
   pull_request:
-    branches:
-      - "**"
+    paths:
+      - "**/*.rs"
+      - ".github/workflows/clippy.yml"
 
 jobs:
   clippy_check:
