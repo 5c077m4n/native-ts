@@ -3,7 +3,6 @@ use lexer::{import_token::ImportToken, js_token::JsToken};
 use logos::Logos;
 use std::io::Result;
 
-#[allow(dead_code)]
 pub async fn parse(script: &str) -> Result<()> {
 	let mut import_lex = ImportToken::lexer(script);
 	let _import_ast = import_tokens_to_ast(&mut import_lex).await?;
