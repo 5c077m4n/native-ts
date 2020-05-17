@@ -10,13 +10,9 @@ pub async fn import_tokens_to_ast(ast_iter: &mut Lexer<'_, ImportToken>) -> Resu
 		match token {
 			ImportToken::Import => {
 				if let Some(ImportToken::Text) = ast_iter.next() {
-					let _import_name = ast_iter.slice();
+					let _import_name: String = ast_iter.slice().parse::<String>().unwrap();
 				}
-				if let Some(ImportToken::BracketCurlyOpen) = ast_iter.next() {
-					let import_name_list = ast_iter.slice().parse::<String>().unwrap();
-					let import_name_list = import_name_list.split(",");
-					let _import_name_list: Vec<_> = import_name_list.collect();
-				}
+				if let Some(ImportToken::BracketCurlyOpen) = ast_iter.next() {}
 			}
 			ImportToken::Error => {
 				return Err(Error::new(
