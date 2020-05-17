@@ -1,11 +1,13 @@
-#[derive(Debug, Default, PartialEq)]
+use super::ExpressionType;
+use std::path::PathBuf;
+
+#[derive(Default)]
 pub struct Node {
-	pub raw_value: String,
-	pub node_type: String,
-	pub file_path: String,
+	pub raw_value: Option<String>,
+	pub node_type: ExpressionType,
+	pub file_path: PathBuf,
 	pub column: usize,
 	pub line: usize,
-	pub children: Vec<Node>,
 }
 
 pub type BoxedNode = Box<Node>;
@@ -13,11 +15,6 @@ pub type BoxedOptionalNode = Box<Option<Node>>;
 pub type BoxedVecNode = Box<Vec<Node>>;
 
 impl Node {
-	pub fn add(&mut self, child: Node) -> &Self {
-		self.children.push(child);
-		self
-	}
-
 	pub fn boxed() -> BoxedNode {
 		let new_node: Self = Default::default();
 		Box::new(new_node)
@@ -40,11 +37,17 @@ mod ast_tests {
 
 	#[test]
 	fn sanity() {
-		let mut node: Node = Default::default();
-		assert_eq!(node.children.len(), 0);
+		let node = Node::boxed();
+		let child_node = Node::boxed();
 
-		let child_node: Node = Default::default();
-		node.add(child_node);
-		assert_eq!(node.children.len(), 1);
+		match node.node_type {
+			ExpressionType::StatementList(mut boxed_node) => {
+				assert_eq!((*boxed_node).len(), 0);
+
+				(*boxed_node).push(*child_node);
+				assert_eq!((*boxed_node).len(), 1);
+			}
+			_ => unreachable!(),
+		}
 	}
 }

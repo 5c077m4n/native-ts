@@ -1,6 +1,6 @@
 use super::{BoxedNode, BoxedOptionalNode};
 
-pub enum DeclarationTypes {
+pub enum DeclarationType {
 	Var(BoxedNode, BoxedOptionalNode),
 	Let(BoxedNode, BoxedOptionalNode),
 	Const(BoxedNode, BoxedNode),
