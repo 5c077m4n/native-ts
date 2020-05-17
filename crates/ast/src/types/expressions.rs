@@ -24,6 +24,8 @@ pub enum ExpressionType {
 	InstanceOf(BoxedNode),
 	UnaryOp(BoxedNode, BoxedNode),
 	BinaryOp(BoxedNode, BoxedNode, BoxedNode),
+	ImportDefault(BoxedNode, BoxedNode),
+	ImportNamed(BoxedVecNode, BoxedNode),
 }
 
 impl Default for ExpressionType {

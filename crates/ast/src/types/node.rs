@@ -41,11 +41,11 @@ mod ast_tests {
 		let child_node = Node::boxed();
 
 		match node.node_type {
-			ExpressionType::StatementList(mut boxed_node) => {
-				assert_eq!((*boxed_node).len(), 0);
+			ExpressionType::StatementList(mut boxed_node_vec) => {
+				assert_eq!((*boxed_node_vec).len(), 0);
 
-				(*boxed_node).push(*child_node);
-				assert_eq!((*boxed_node).len(), 1);
+				(*boxed_node_vec).push(*child_node);
+				assert_eq!((*boxed_node_vec).len(), 1);
 			}
 			_ => unreachable!(),
 		}

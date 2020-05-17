@@ -2,7 +2,7 @@ use logos::{Lexer, Logos};
 
 fn get_string_content(lex: &mut Lexer<JsToken>) -> Option<String> {
 	let lex = lex.slice();
-	let content: String = lex[1..lex.len() - 1].parse().ok()?;
+	let content: String = lex[1..(lex.len() - 1)].parse().ok()?;
 
 	Some(content)
 }
