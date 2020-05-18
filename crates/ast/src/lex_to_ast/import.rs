@@ -46,7 +46,7 @@ mod parser_tests {
 	use logos::Logos;
 
 	#[tokio::test]
-	#[should_panic(expected = "There was an error in parsing the input `(` @ 11..12.")]
+	#[should_panic(expected = "Unknown token `console.log` @ 0..11.")]
 	async fn sanity() {
 		let mut lex = ImportToken::lexer("console.log(123);");
 		let _ = import_tokens_to_ast(&mut lex).await.unwrap();
