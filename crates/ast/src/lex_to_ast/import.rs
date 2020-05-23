@@ -43,7 +43,7 @@ pub async fn import_tokens_to_ast(
 }
 
 #[cfg(test)]
-mod parser_tests {
+mod import_ast_tests {
 	use super::*;
 	use logos::Logos;
 
