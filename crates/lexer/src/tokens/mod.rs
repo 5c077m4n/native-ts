@@ -1,9 +1,9 @@
-mod bracket_token;
-mod html_token;
-mod import_token;
-mod js_token;
+mod bracket;
+mod html;
+mod js;
+mod static_import;
 
-pub use bracket_token::BracketToken;
-pub use html_token::HtmlToken;
-pub use import_token::ImportToken;
-pub use js_token::JsToken;
+pub use bracket::BracketToken;
+pub use html::HtmlToken;
+pub use js::JsToken;
+pub use static_import::StaticImportToken;

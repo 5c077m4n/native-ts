@@ -1,3 +1,3 @@
 mod tokens;
 
-pub use tokens::{ImportToken, JsToken};
+pub use tokens::{JsToken, StaticImportToken};

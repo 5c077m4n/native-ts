@@ -1,10 +1,10 @@
 use ast::{import_tokens_to_ast, js_tokens_to_ast};
-use lexer::{ImportToken, JsToken};
+use lexer::{JsToken, StaticImportToken};
 use logos::Logos;
 use std::io::Result;
 
 pub async fn parse(script: &str) -> Result<()> {
-	let mut import_lex = ImportToken::lexer(script);
+	let mut import_lex = StaticImportToken::lexer(script);
 	let _import_ast = import_tokens_to_ast(&mut import_lex).await?;
 
 	for token in import_lex.spanned() {
