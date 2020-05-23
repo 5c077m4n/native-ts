@@ -41,18 +41,3 @@ pub async fn import_tokens_to_ast(
 
 	Ok(root)
 }
-
-#[cfg(test)]
-mod import_ast_tests {
-	use super::*;
-	use logos::Logos;
-
-	#[tokio::test]
-	#[should_panic(expected = "Unknown token `console.log` @ 0..11.")]
-	async fn sanity() {
-		let mut lex = StaticImportToken::lexer("console.log(123);");
-		let _ = import_tokens_to_ast(&mut lex).await.unwrap();
-
-		unreachable!();
-	}
-}
