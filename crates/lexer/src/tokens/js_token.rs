@@ -192,11 +192,8 @@ pub enum JsToken {
 	#[regex("[a-zA-Z0-9$_]+", |lex| lex.slice().parse())]
 	Text(String),
 
-	// TODO: fix this... (does not find '12e3')
-	#[regex(r"-?\d+(?:e\d+)?", |lex| lex.slice().parse(), priority = 2)]
-	Int(i32),
-	#[regex(r"-?\d+\.\d*(?:e\d+)?", |lex| lex.slice().parse())]
-	Float(f64),
+	#[regex(r#"-?\d+(\.\d*)?(?:e\d+)?"#, |lex| lex.slice().parse(), priority = 2)]
+	Number(f64),
 
 	#[regex(r"[\s\t\n\f]+", logos::skip)]
 	#[error]
@@ -238,7 +235,7 @@ mod token_tests {
 		assert_eq!(lex.next(), Some(JsToken::Period));
 		assert_eq!(lex.next(), Some(JsToken::Text("log".to_owned())));
 		assert_eq!(lex.next(), Some(JsToken::BracketOpen));
-		assert_eq!(lex.next(), Some(JsToken::Int(123)));
+		assert_eq!(lex.next(), Some(JsToken::Number(123.)));
 		assert_eq!(lex.next(), Some(JsToken::BracketClose));
 	}
 
@@ -246,7 +243,7 @@ mod token_tests {
 	fn parse_number_basic_int() {
 		let mut lex = JsToken::lexer(r"12");
 
-		assert_eq!(lex.next(), Some(JsToken::Int(12)));
+		assert_eq!(lex.next(), Some(JsToken::Number(12.)));
 		assert_eq!(lex.next(), None);
 	}
 
@@ -254,7 +251,7 @@ mod token_tests {
 	fn parse_number_neg_int() {
 		let mut lex = JsToken::lexer(r"-12");
 
-		assert_eq!(lex.next(), Some(JsToken::Int(-12)));
+		assert_eq!(lex.next(), Some(JsToken::Number(-12.)));
 		assert_eq!(lex.next(), None);
 	}
 
@@ -262,7 +259,7 @@ mod token_tests {
 	fn parse_number_basic_float() {
 		let mut lex = JsToken::lexer(r"12.");
 
-		assert_eq!(lex.next(), Some(JsToken::Float(12.0)));
+		assert_eq!(lex.next(), Some(JsToken::Number(12.)));
 		assert_eq!(lex.next(), None);
 	}
 
@@ -270,16 +267,20 @@ mod token_tests {
 	fn parse_number_neg_float() {
 		let mut lex = JsToken::lexer(r"-12.");
 
-		assert_eq!(lex.next(), Some(JsToken::Float(-12.0)));
+		assert_eq!(lex.next(), Some(JsToken::Number(-12.)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
-	#[ignore]
 	fn parse_number_exp_int() {
 		let mut lex = JsToken::lexer(r"12e3");
 
-		assert_eq!(lex.next(), Some(JsToken::Int(12_000)));
+		assert_eq!(
+			lex.next(),
+			Some(JsToken::Number(12_000.)),
+			"Bad pattern: {:?}",
+			lex.slice()
+		);
 		assert_eq!(lex.next(), None);
 	}
 
@@ -287,7 +288,7 @@ mod token_tests {
 	fn parse_number_exp_float() {
 		let mut lex = JsToken::lexer(r"13.e2");
 
-		assert_eq!(lex.next(), Some(JsToken::Float(13e2)));
+		assert_eq!(lex.next(), Some(JsToken::Number(13e2)));
 		assert_eq!(lex.next(), None);
 	}
 
@@ -295,7 +296,7 @@ mod token_tests {
 	fn parse_number_float() {
 		let mut lex = JsToken::lexer(r"123123.");
 
-		assert_eq!(lex.next(), Some(JsToken::Float(123_123.0)));
+		assert_eq!(lex.next(), Some(JsToken::Number(123_123.)));
 		assert_eq!(lex.next(), None);
 	}
 
@@ -303,18 +304,22 @@ mod token_tests {
 	fn parse_number_float_2() {
 		let mut lex = JsToken::lexer(r"123123.55");
 
-		assert_eq!(lex.next(), Some(JsToken::Float(123_123.55)));
+		assert_eq!(lex.next(), Some(JsToken::Number(123_123.55)));
 		assert_eq!(lex.next(), None);
 	}
 
 	#[test]
-	#[ignore]
 	fn parse_expr() {
 		let mut lex = JsToken::lexer(r#"23e3 !== 22."#);
 
-		assert_eq!(lex.next(), Some(JsToken::Int(23_000)), "{}", lex.slice());
+		assert_eq!(
+			lex.next(),
+			Some(JsToken::Number(23_000.)),
+			"Bad token: {}",
+			lex.slice()
+		);
 		assert_eq!(lex.next(), Some(JsToken::NotEqEq));
-		assert_eq!(lex.next(), Some(JsToken::Float(22.0)));
+		assert_eq!(lex.next(), Some(JsToken::Number(22.)));
 		assert_eq!(lex.next(), None);
 	}
 }
