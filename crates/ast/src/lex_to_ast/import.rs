@@ -12,10 +12,26 @@ pub async fn import_tokens_to_ast(
 		match token {
 			StaticImportToken::Import => {
 				let next_token = ast_iter.next();
+
 				if let Some(StaticImportToken::Text) = next_token {
 					let _import_name: String = ast_iter.slice().parse::<String>().unwrap();
+				} else if let Some(StaticImportToken::BracketCurlyOpen) = next_token {
+					let _import_names: Vec<&str> = ast_iter
+						.slice()
+						.parse::<String>()
+						.unwrap()
+						.split(",")
+						.collect();
+				} else {
+					return Err(Error::new(
+						ErrorKind::InvalidInput,
+						format!(
+							"There was an invalid input after the import keyword `{}` @ {:?}.",
+							ast_iter.slice(),
+							ast_iter.span()
+						),
+					));
 				}
-				if let Some(StaticImportToken::BracketCurlyOpen) = next_token {}
 			}
 			StaticImportToken::Error => {
 				return Err(Error::new(

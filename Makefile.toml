@@ -17,10 +17,10 @@ args = ["clean"]
 
 [tasks.ci-build]
 command = "cargo"
-args = ["build", "-vv", "--all-features"]
+args = ["build", "-v", "--all-features"]
 dependencies = ["clean"]
 
 [tasks.ci-test]
 command = "cargo"
-args = ["test", "-vv", "--all-features"]
+args = ["test", "-v", "--all-features"]
 dependencies = ["ci-build"]
