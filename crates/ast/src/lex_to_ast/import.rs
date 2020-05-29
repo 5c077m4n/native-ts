@@ -20,7 +20,7 @@ pub async fn import_tokens_to_ast(
 						.slice()
 						.parse::<String>()
 						.unwrap()
-						.split(",")
+						.split(',')
 						.collect();
 				} else {
 					return Err(Error::new(
